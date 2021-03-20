@@ -1,4 +1,4 @@
-name: Build/release
+name: Lint/Test/Build
 
 on: push
 
@@ -24,6 +24,9 @@ jobs:
 
       - name: Linting
         run: yarn lint
+
+      - name: Testing
+        run: yarn test
 
       - name: Packaging
         run: yarn package
