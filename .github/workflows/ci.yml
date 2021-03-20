@@ -1,0 +1,34 @@
+name: Lint/Test/Build
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - uses: actions/cache@v2
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Linting
+        run: yarn lint
+
+      - name: Testing
+        run: yarn test
+
+      - name: Packaging
+        run: yarn package
