@@ -2,5 +2,8 @@
   "eslint.codeActionsOnSave.mode": "all",
   "[typescriptreact]": {
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "preload"
+  ]
 }
