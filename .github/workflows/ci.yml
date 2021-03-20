@@ -14,10 +14,16 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+      - uses: actions/cache@v2
         with:
-          node-version: 10
-          
-      - name: Buiid
-        run: yarn build
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Linting
+        run: yarn lint
+
+      - name: Packaging
+        run: yarn package
