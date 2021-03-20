@@ -3,7 +3,7 @@ name: Lint/Test/Build
 on: push
 
 jobs:
-  release:
+  ci:
     runs-on: ${{ matrix.os }}
 
     strategy:
