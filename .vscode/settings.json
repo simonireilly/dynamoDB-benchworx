@@ -1,0 +1,6 @@
+{
+  "eslint.codeActionsOnSave.mode": "all",
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
+  }
+}
