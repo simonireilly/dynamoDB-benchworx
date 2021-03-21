@@ -30,8 +30,8 @@ jobs:
       - name: Testing
         run: yarn test
 
-      - name: Cypress Testing
-        run: yarn cypress run
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
 
       - name: Packaging
         run: yarn package
