@@ -11,6 +11,9 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "types": [
+      "cypress",
+    ],
     "paths": {
       "*": [
         "node_modules/*"

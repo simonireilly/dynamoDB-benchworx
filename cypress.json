@@ -1,0 +1,7 @@
+{
+  "experimentalComponentTesting": true,
+  "testFiles": "**/*spec.{js,jsx,ts,tsx}",
+  "env": {
+    "reactDevtools": true
+  }
+}
