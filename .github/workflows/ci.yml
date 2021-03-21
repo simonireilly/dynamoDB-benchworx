@@ -13,7 +13,7 @@ jobs:
         with:
           path: |
             **/node_modules
-            **/.cache/Cypress
+            ~/.cache/Cypress
           key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-modules-v2-
