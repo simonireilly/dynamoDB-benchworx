@@ -12,11 +12,12 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            "**/node_modules"
-            "**/.cache/Cypress"
+            **/node_modules
+            **/.cache/Cypress
           key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-modules-v2-
+            ${{ runner.os }}
 
       - name: Install packages
         run: yarn install
@@ -58,10 +59,11 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            "**/node_modules"
+            **/node_modules
           key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-modules-v2-
+            ${{ runner.os }}
 
       - name: Install packages
         run: yarn install
