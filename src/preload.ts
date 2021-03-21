@@ -1,4 +1,5 @@
-console.info("*");
+console.info("Preloading node modules");
+
 import { contextBridge } from "electron";
 
 import {

@@ -16,6 +16,8 @@ interface Props {
 }
 
 export type Credentials = {
+  profile: string;
+  userId: string;
   awsAccountId: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
@@ -27,6 +29,7 @@ export type ElectronContext = {
   aws: Window["aws"];
   credentials?: Credentials;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
+  clearCredentials?: () => void;
 };
 
 export const ElectronStore = createContext<ElectronContext>({
@@ -34,14 +37,19 @@ export const ElectronStore = createContext<ElectronContext>({
 });
 
 export const ElectronContextProvider = (props: Props): ReactElement => {
-  const [credentials, setCredentials] = useState({
+  const emptyCredentials = {
     profile: "",
+    userId: "",
     awsAccountId: "",
     awsAccessKeyId: "",
     awsSecretAccessKey: "",
     awsRoleArn: "",
     sessionToken: "",
-  });
+  };
+
+  const [credentials, setCredentials] = useState<Credentials>(emptyCredentials);
+
+  const clearCredentials = () => setCredentials(emptyCredentials);
 
   return (
     <ElectronStore.Provider
@@ -49,6 +57,7 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         aws: window.aws,
         credentials,
         setCredentials,
+        clearCredentials,
       }}
     >
       {props.children}

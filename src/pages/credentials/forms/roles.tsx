@@ -10,6 +10,7 @@ import {
   Theme,
   InputAdornment,
   TextField,
+  FormHelperText,
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 
@@ -22,9 +23,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+// Todo, find roles for the source_profile, so they can be assumed as an STSAssumeRole
+// call, with the given credentials.
 export const Roles = (): ReactElement => {
   const classes = useStyles();
-
   const [role, setRole] = useState("");
 
   return (
@@ -50,6 +52,10 @@ export const Roles = (): ReactElement => {
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
           </Select>
+          <FormHelperText>
+            If the Profile selected is referenced as a{" "}
+            <code>source_profile</code> for any roles, they will appear above
+          </FormHelperText>
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField

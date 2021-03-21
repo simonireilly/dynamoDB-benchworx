@@ -50,6 +50,7 @@ function getStepContent(step: number) {
   }
 }
 
+// TODO: Consider ditching steps, they obscure the form, although they look nice
 export const Steps = (): ReactElement => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);

@@ -26,18 +26,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Account = (): ReactElement => {
-  const { aws } = useContext(ElectronStore);
+  const { aws, setCredentials, credentials, clearCredentials } = useContext(
+    ElectronStore
+  );
   const classes = useStyles();
-
-  const [credentials, setCredentials] = useState({});
-  const [profile, setProfile] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [config, setConfig] = useState(null);
+  const [showAccessKey, setShowAccessKey] = useState(false);
+  const [showSecretKey, setShowSecretKey] = useState(false);
 
   useEffect(() => {
     const fetchCredentials = async () => {
       try {
         const configuration = await aws.listCredentials();
-        setCredentials(configuration);
+        setConfig(configuration);
       } catch (e) {
         console.error(e);
       }
@@ -54,8 +55,23 @@ export const Account = (): ReactElement => {
             Choose AWS Account Profile
           </InputLabel>
           <Select
-            value={profile}
-            onChange={(e) => setProfile(String(e.target.value))}
+            value={credentials.profile}
+            onChange={(e) => {
+              const profile = String(e.target.value);
+              if (!profile) return clearCredentials();
+              setCredentials((current) => ({
+                ...current,
+                ...{
+                  profile: String(e.target.value),
+                  awsAccessKeyId: String(
+                    config.credentialsFile[profile]["aws_access_key_id"]
+                  ),
+                  awsSecretAccessKey: String(
+                    config.credentialsFile[profile]["aws_secret_access_key"]
+                  ),
+                },
+              }));
+            }}
             autoWidth
             inputProps={{
               name: "Choose AWS Account Profile",
@@ -65,9 +81,12 @@ export const Account = (): ReactElement => {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {config &&
+              Object.keys(config.credentialsFile).map((profile) => (
+                <MenuItem value={profile} key={profile}>
+                  {profile}
+                </MenuItem>
+              ))}
           </Select>
           <FormHelperText>
             These profiles were found on your local machine. To use another
@@ -79,16 +98,17 @@ export const Account = (): ReactElement => {
             id="aws-access-key-id"
             label="AWS Access Key ID"
             variant="filled"
-            type={showPassword ? "text" : "password"}
+            value={credentials.awsAccessKeyId}
+            type={showAccessKey ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setShowPassword((current) => !current)}
+                    onClick={() => setShowAccessKey((current) => !current)}
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showAccessKey ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -100,16 +120,17 @@ export const Account = (): ReactElement => {
             id="aws-secret-access-key"
             label="AWS Secret Access Key"
             variant="filled"
-            type={showPassword ? "text" : "password"}
+            value={credentials.awsSecretAccessKey}
+            type={showSecretKey ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={() => setShowPassword((current) => !current)}
+                    onClick={() => setShowSecretKey((current) => !current)}
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showSecretKey ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
