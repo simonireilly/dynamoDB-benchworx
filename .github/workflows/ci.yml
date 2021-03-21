@@ -30,5 +30,8 @@ jobs:
       - name: Testing
         run: yarn test
 
+      - name: Cypress Testing
+        run: yarn cypress run
+
       - name: Packaging
         run: yarn package

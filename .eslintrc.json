@@ -9,7 +9,9 @@
       "node": {
         "extensions": [
           ".ts",
-          ".tsx"
+          ".tsx",
+          ".js",
+          ".jsx"
         ]
       }
     }

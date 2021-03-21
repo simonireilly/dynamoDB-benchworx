@@ -1,5 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
-import { ElectronStore } from "../../contexts/electron-context";
+import React, { ReactElement, useState } from "react";
 
 import {
   FormControl,

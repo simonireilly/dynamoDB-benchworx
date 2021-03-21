@@ -2,7 +2,8 @@
   "experimentalComponentTesting": true,
   "testFiles": "**/*.spec.{js,ts,jsx,tsx}",
   "env": {
-    "reactDevtools": true
+    "reactDevtools": true,
+    "coverage": false
   },
   "componentFolder": "cypress/component"
 }

@@ -12,9 +12,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "types": [
-      "cypress",
+      "jest",
+      "@cypress/react"
     ],
     "paths": {
+      "@/*": [
+        "./src/*"
+      ],
       "*": [
         "node_modules/*"
       ],
