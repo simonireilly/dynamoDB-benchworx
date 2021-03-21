@@ -14,9 +14,9 @@ jobs:
           path: |
             "**/node_modules"
             "**/.cache/Cypress"
-          key: ${{ runner.os }}-modules-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-modules-v1-
+            ${{ runner.os }}-modules-v2-
 
       - name: Install packages
         run: yarn install
@@ -28,7 +28,7 @@ jobs:
         run: yarn test
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        run: yarn cypress run
 
       - uses: actions/upload-artifact@v1
         if: failure()
@@ -59,9 +59,9 @@ jobs:
         with:
           path: |
             "**/node_modules"
-          key: ${{ runner.os }}-modules-v1-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-modules-v1-
+            ${{ runner.os }}-modules-v2-
 
       - name: Install packages
         run: yarn install
