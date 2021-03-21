@@ -3,23 +3,14 @@ name: Lint/Test/Build
 on: push
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
+  test:
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
       - uses: actions/cache@v2
         with:
           path: |
             "**/node_modules"
             "**/.cache/Cypress"
-            "**/Library/Caches/Cypress"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-modules-
@@ -48,5 +39,29 @@ jobs:
           name: cypress-videos
           path: cypress/videos
 
+  build:
+    runs-on: ${{ matrix.os }}
+
+    needs: test
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
+
+      - name: Install packages
+        run: yarn install
+
       - name: Packaging
-        run: yarn package
+        run: yarn make
