@@ -90,3 +90,7 @@ out/
 
 # Husky
 .husky/
+
+# Cypress debug outputs
+cypress/videos/
+cypress/screenshots/
