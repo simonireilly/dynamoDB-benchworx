@@ -1,10 +1,18 @@
 import React from "react";
 import { mount } from "@cypress/react";
 import { Steps } from "../../../../../src/pages/credentials/steps";
+import {
+  blankCredentials,
+  ElectronStore,
+} from "../../../../../src/pages/contexts/electron-context";
 
 describe("Steps Component", () => {
   beforeEach(() => {
-    mount(<Steps />);
+    mount(
+      <ElectronStore.Provider value={{ credentials: blankCredentials }}>
+        <Steps />
+      </ElectronStore.Provider>
+    );
   });
   it("has steps for selecting aws profile or access keys", () => {
     // Within here we assert the child component is mounted

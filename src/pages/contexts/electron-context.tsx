@@ -36,19 +36,19 @@ export const ElectronStore = createContext<ElectronContext>({
   aws: window.aws,
 });
 
+export const blankCredentials = {
+  profile: "",
+  userId: "",
+  awsAccountId: "",
+  awsAccessKeyId: "",
+  awsSecretAccessKey: "",
+  awsRoleArn: "",
+  sessionToken: "",
+};
+
 export const ElectronContextProvider = (props: Props): ReactElement => {
-  const emptyCredentials = {
-    profile: "",
-    userId: "",
-    awsAccountId: "",
-    awsAccessKeyId: "",
-    awsSecretAccessKey: "",
-    awsRoleArn: "",
-    sessionToken: "",
-  };
-
-  const [credentials, setCredentials] = useState<Credentials>(emptyCredentials);
-
+  const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
+  const emptyCredentials = { ...blankCredentials };
   const clearCredentials = () => setCredentials(emptyCredentials);
 
   return (

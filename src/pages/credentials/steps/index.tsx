@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function getSteps() {
   return [
     "Select AWS Account Profile, or Access Keys",
-    "Assume a role other than the chosen credentials",
+    "(Optional) Assume a Role using the chosen credentials",
   ];
 }
 

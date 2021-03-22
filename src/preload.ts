@@ -5,16 +5,19 @@ import { contextBridge } from "electron";
 import {
   loadSharedConfigFiles,
   SharedConfigFiles,
+  SharedConfigInit,
 } from "@aws-sdk/shared-ini-file-loader";
 
 declare global {
   interface Window {
     aws: {
-      listCredentials: () => Promise<SharedConfigFiles>;
+      loadSharedConfigFiles: (
+        init?: SharedConfigInit
+      ) => Promise<SharedConfigFiles>;
     };
   }
 }
 
 contextBridge.exposeInMainWorld("aws", {
-  listCredentials: () => loadSharedConfigFiles(),
+  loadSharedConfigFiles,
 });

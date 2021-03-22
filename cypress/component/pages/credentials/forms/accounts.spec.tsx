@@ -1,10 +1,18 @@
 import React from "react";
 import { mount } from "@cypress/react";
 import { Account } from "../../../../../src/pages/credentials/forms/account";
+import {
+  blankCredentials,
+  ElectronStore,
+} from "../../../../../src/pages/contexts/electron-context";
 
 describe("Account Component", () => {
   beforeEach(() => {
-    mount(<Account />);
+    mount(
+      <ElectronStore.Provider value={{ credentials: blankCredentials }}>
+        <Account />
+      </ElectronStore.Provider>
+    );
   });
   it("renders a select for available roles", () => {
     cy.contains("Choose AWS Account Profile").should("be.visible");

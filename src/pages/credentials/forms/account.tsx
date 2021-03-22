@@ -37,7 +37,7 @@ export const Account = (): ReactElement => {
   useEffect(() => {
     const fetchCredentials = async () => {
       try {
-        const configuration = await aws.listCredentials();
+        const configuration = await aws.loadSharedConfigFiles();
         setConfig(configuration);
       } catch (e) {
         console.error(e);
