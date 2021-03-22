@@ -13,6 +13,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 
@@ -50,6 +51,9 @@ export const Account = (): ReactElement => {
   return (
     <div>
       <form noValidate autoComplete="off">
+        <FormControl className={classes.formControl}>
+          <Typography>Select an available profile</Typography>
+        </FormControl>
         <FormControl variant="filled" className={classes.formControl}>
           <InputLabel htmlFor="aws-select-profile">
             Choose AWS Account Profile
@@ -58,25 +62,18 @@ export const Account = (): ReactElement => {
             value={credentials.profile}
             onChange={(e) => {
               const profile = String(e.target.value);
-              if (!profile) return clearCredentials();
               setCredentials((current) => ({
                 ...current,
                 ...{
-                  profile: String(e.target.value),
-                  awsAccessKeyId: String(
-                    config.credentialsFile[profile]["aws_access_key_id"]
-                  ),
-                  awsSecretAccessKey: String(
-                    config.credentialsFile[profile]["aws_secret_access_key"]
-                  ),
+                  profile,
                 },
               }));
             }}
-            autoWidth
             inputProps={{
               name: "Choose AWS Account Profile",
               id: "aws-select-profile",
             }}
+            autoWidth
           >
             <MenuItem value="">
               <em>None</em>
@@ -94,11 +91,23 @@ export const Account = (): ReactElement => {
           </FormHelperText>
         </FormControl>
         <FormControl className={classes.formControl}>
+          <Typography>Enter credentials manually</Typography>
+        </FormControl>
+        <FormControl className={classes.formControl}>
           <TextField
             id="aws-access-key-id"
             label="AWS Access Key ID"
             variant="filled"
+            disabled={credentials.profile !== ""}
             value={credentials.awsAccessKeyId}
+            onChange={(e) =>
+              setCredentials((current) => ({
+                ...current,
+                ...{
+                  awsAccessKeyId: String(e.target.value),
+                },
+              }))
+            }
             type={showAccessKey ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -121,7 +130,16 @@ export const Account = (): ReactElement => {
             label="AWS Secret Access Key"
             variant="filled"
             value={credentials.awsSecretAccessKey}
+            disabled={credentials.profile !== ""}
             type={showSecretKey ? "text" : "password"}
+            onChange={(e) =>
+              setCredentials((current) => ({
+                ...current,
+                ...{
+                  awsSecretAccessKey: String(e.target.value),
+                },
+              }))
+            }
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

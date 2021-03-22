@@ -56,15 +56,6 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-v2-
-            ${{ runner.os }}
-
       - name: Install packages
         run: yarn install
 
