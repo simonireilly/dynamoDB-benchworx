@@ -8,9 +8,12 @@ import {
   SharedConfigInit,
 } from "@aws-sdk/shared-ini-file-loader";
 
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
+
 declare global {
   interface Window {
     aws: {
+      defaultProvider: typeof defaultProvider;
       loadSharedConfigFiles: (
         init?: SharedConfigInit
       ) => Promise<SharedConfigFiles>;
@@ -20,4 +23,5 @@ declare global {
 
 contextBridge.exposeInMainWorld("aws", {
   loadSharedConfigFiles,
+  defaultProvider,
 });

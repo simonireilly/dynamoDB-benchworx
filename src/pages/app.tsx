@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { ElectronContextProvider } from "./contexts/electron-context";
+import { ElectronContextProvider } from "../contexts/electron-context";
 
 import { Steps } from "./credentials/steps";
 

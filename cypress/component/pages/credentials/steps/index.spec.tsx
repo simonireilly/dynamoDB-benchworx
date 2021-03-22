@@ -4,7 +4,7 @@ import { Steps } from "../../../../../src/pages/credentials/steps";
 import {
   blankCredentials,
   ElectronStore,
-} from "../../../../../src/pages/contexts/electron-context";
+} from "../../../../../src/contexts/electron-context";
 
 describe("Steps Component", () => {
   beforeEach(() => {

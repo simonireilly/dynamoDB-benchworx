@@ -47,9 +47,27 @@ export const blankCredentials = {
 };
 
 export const ElectronContextProvider = (props: Props): ReactElement => {
+  // TODO: Set credentials must assign AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+  // when those values are passed in, and also, remove them from the env when those
+  // values are unset
   const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
   const emptyCredentials = { ...blankCredentials };
   const clearCredentials = () => setCredentials(emptyCredentials);
+
+  // Handles assuming credentials in order of:
+  //
+  // 1. From process.env
+  // 2. From shared INI
+  // 3. EC2 instance profile
+  //
+  // We should ensure the order is:
+  //
+  // 1. ENV if set in the process
+  // 2. Profile if set
+  // 3. TODO: SSO once it can be supported
+  const configureProvider = (credentials: Credentials) => {
+    window.aws.defaultProvider({ profile: credentials.profile });
+  };
 
   return (
     <ElectronStore.Provider

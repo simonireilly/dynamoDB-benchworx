@@ -4,7 +4,7 @@ import { Account } from "../../../../../src/pages/credentials/forms/account";
 import {
   blankCredentials,
   ElectronStore,
-} from "../../../../../src/pages/contexts/electron-context";
+} from "../../../../../src/contexts/electron-context";
 
 describe("Account Component", () => {
   beforeEach(() => {

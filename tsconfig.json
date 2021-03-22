@@ -13,7 +13,8 @@
     "resolveJsonModule": true,
     "types": [
       "jest",
-      "@cypress/react"
+      "@cypress/react",
+      "@aws-sdk/types"
     ],
     "paths": {
       "@/*": [
