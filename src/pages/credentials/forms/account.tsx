@@ -14,8 +14,13 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  Snackbar,
+  Divider,
 } from "@material-ui/core";
+import { Alert, Color } from "@material-ui/lab";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { PreloaderResponse } from "../../../preload";
+import { ListTablesCommandOutput } from "@aws-sdk/client-dynamodb";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,29 +32,63 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Account = (): ReactElement => {
-  const { aws, setCredentials, credentials, clearCredentials } = useContext(
-    ElectronStore
-  );
+  const {
+    aws: { listTables, loadSharedConfigFiles },
+    setCredentials,
+    credentials,
+  } = useContext(ElectronStore);
   const classes = useStyles();
   const [config, setConfig] = useState(null);
+  const [results, setResults] = useState<
+    PreloaderResponse<ListTablesCommandOutput>
+  >({
+    message: "No access to Dynamo",
+    type: "warning",
+    data: null,
+    details: null,
+  });
   const [showAccessKey, setShowAccessKey] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
 
   useEffect(() => {
-    const fetchCredentials = async () => {
+    const setup = async () => {
       try {
-        const configuration = await aws.loadSharedConfigFiles();
+        const configuration = await loadSharedConfigFiles();
         setConfig(configuration);
+
+        const newResults = await listTables(credentials.profile);
+        setResults(newResults);
       } catch (e) {
         console.error(e);
       }
     };
 
-    fetchCredentials();
+    setup();
   }, []);
+
+  // TODO: Encapsulate this logic in the credential fetcher
+  const profiles: { profile: string; type: string }[] = config
+    ? [
+        ...Object.keys(config.configFile).map((profile) => ({
+          profile,
+          type: "config",
+        })),
+        ...Object.keys(config.credentialsFile).map((profile) => ({
+          profile,
+          type: "credential",
+        })),
+      ]
+    : [];
 
   return (
     <div>
+      <Snackbar open={!!results} autoHideDuration={6000}>
+        <Alert severity={(results.type as Color) || "info"}>
+          {results.message}
+          <Divider variant="fullWidth" />
+          {results.details}
+        </Alert>
+      </Snackbar>
       <form noValidate autoComplete="off">
         <FormControl className={classes.formControl}>
           <Typography>Select an available profile</Typography>
@@ -60,7 +99,7 @@ export const Account = (): ReactElement => {
           </InputLabel>
           <Select
             value={credentials.profile}
-            onChange={(e) => {
+            onChange={async (e) => {
               const profile = String(e.target.value);
               setCredentials((current) => ({
                 ...current,
@@ -68,6 +107,8 @@ export const Account = (): ReactElement => {
                   profile,
                 },
               }));
+              const newResults = await listTables(profile);
+              setResults(newResults);
             }}
             inputProps={{
               name: "Choose AWS Account Profile",
@@ -79,9 +120,12 @@ export const Account = (): ReactElement => {
               <em>None</em>
             </MenuItem>
             {config &&
-              Object.keys(config.credentialsFile).map((profile) => (
-                <MenuItem value={profile} key={profile}>
-                  {profile}
+              profiles.map((profile) => (
+                <MenuItem
+                  value={profile.profile}
+                  key={profile.profile + profile.type}
+                >
+                  <b>{profile.profile}</b>-<em>{profile.type}</em>
                 </MenuItem>
               ))}
           </Select>

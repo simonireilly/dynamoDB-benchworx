@@ -46,7 +46,7 @@
     "@aws-sdk/types" "3.6.1"
     tslib "^1.8.0"
 
-"@aws-sdk/client-dynamodb@^3.9.0":
+"@aws-sdk/client-dynamodb@3.9.0", "@aws-sdk/client-dynamodb@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-dynamodb/-/client-dynamodb-3.9.0.tgz#794e0d67a24f18775878785ff30033c31fb35253"
   integrity sha512-MQ0lyRKpWFEesKWHzAWr+B7PQPspmyC/63BZFHTCm2qc1frhvdcHX5XuewQSUy1uMH8c8exzjsxqLgx8WvBiVg==
@@ -268,6 +268,17 @@
   dependencies:
     tslib "^1.8.0"
 
+"@aws-sdk/lib-dynamodb@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/lib-dynamodb/-/lib-dynamodb-3.9.0.tgz#a700ac285b83f6a947bacc568c863122cadb4add"
+  integrity sha512-6PxT/6orYJYuyNOYx/4AOIWKUFoXJCbRnr2DkAgnd9D/7IsSwM1NRXu5GI9rsuWy6BJum8/pc4OV4p3VvKPANw==
+  dependencies:
+    "@aws-sdk/client-dynamodb" "3.9.0"
+    "@aws-sdk/smithy-client" "3.6.1"
+    "@aws-sdk/types" "3.6.1"
+    "@aws-sdk/util-dynamodb" "3.9.0"
+    tslib "^1.8.0"
+
 "@aws-sdk/middleware-content-length@3.6.1":
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-content-length/-/middleware-content-length-3.6.1.tgz#f9c00a4045b2b56c1ff8bcbb3dec9c3d42332992"
@@ -486,6 +497,13 @@
   integrity sha512-OGUh2B5NY4h7iRabqeZ+EgsrzE1LUmNFzMyhoZv0tO4NExyfQjxIYXLQQvydeOq9DJUbCw+yrRZrj8vXNDQG+g==
   dependencies:
     "@aws-sdk/is-array-buffer" "3.6.1"
+    tslib "^1.8.0"
+
+"@aws-sdk/util-dynamodb@3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/util-dynamodb/-/util-dynamodb-3.9.0.tgz#3050b9ee0ee9ffa4146982217939915c85932a2e"
+  integrity sha512-NyyF0GlbksMonzhMPJCNxZvJIZyZoWNUc4D8PMpeGVfAQiA9qfCM3x2xbv7EIzvEi9giq1FFSWz99gSeL+hKAA==
+  dependencies:
     tslib "^1.8.0"
 
 "@aws-sdk/util-hex-encoding@3.6.1":
@@ -2551,6 +2569,17 @@
   integrity sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
+
+"@material-ui/lab@^4.0.0-alpha.57":
+  version "4.0.0-alpha.57"
+  resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.57.tgz#e8961bcf6449e8a8dabe84f2700daacfcafbf83a"
+  integrity sha512-qo/IuIQOmEKtzmRD2E4Aa6DB4A87kmY6h0uYhjUmrrgmEAgbbw9etXpWPVXuRK6AGIQCjFzV6WO2i21m1R4FCw==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@material-ui/utils" "^4.11.2"
+    clsx "^1.0.4"
+    prop-types "^15.7.2"
+    react-is "^16.8.0 || ^17.0.0"
 
 "@material-ui/styles@^4.11.3":
   version "4.11.3"
