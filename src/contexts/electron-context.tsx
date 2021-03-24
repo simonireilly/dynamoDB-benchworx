@@ -14,6 +14,7 @@ import React, {
 
 interface Props {
   children: ReactElement;
+  aws?: Window["aws"];
 }
 
 export type Credentials = {
@@ -68,7 +69,7 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   return (
     <ElectronStore.Provider
       value={{
-        aws: window.aws,
+        aws: props.aws || window.aws,
         credentials,
         setCredentials,
         notification,

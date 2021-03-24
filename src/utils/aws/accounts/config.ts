@@ -72,7 +72,6 @@ const mergeCredentialsAndConfig = (config: SharedConfigFiles) => {
 
 const safeConfigConstructor = (entry: [string, Profile]): SafeProfile => {
   const [profile, data = {}] = entry;
-  console.info({ profile, data });
   const { aws_access_key_id, aws_secret_access_key, ...safeData } = data;
   return {
     profile,

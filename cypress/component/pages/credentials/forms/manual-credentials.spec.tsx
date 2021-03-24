@@ -1,10 +1,10 @@
 import React from "react";
 import { mount } from "@cypress/react";
-import { Roles } from "@/pages/credentials/forms/roles";
+import { Profile } from "@/pages/credentials/forms/profile";
 
 describe("Role Component", () => {
   beforeEach(() => {
-    mount(<Roles />);
+    mount(<Profile />);
   });
   it("renders a select for available roles", () => {
     cy.contains("Choose AWS Account Role").should("be.visible");

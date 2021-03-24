@@ -1,10 +1,7 @@
 import React from "react";
 import { mount } from "@cypress/react";
 import { Steps } from "@/pages/credentials/steps";
-import {
-  blankCredentials,
-  ElectronStore,
-} from "@/contexts/electron-context";
+import { blankCredentials, ElectronStore } from "@/contexts/electron-context";
 
 describe("Steps Component", () => {
   beforeEach(() => {
