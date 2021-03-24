@@ -3,6 +3,7 @@
 // Wrap entire application and access the current authenticated user for this context
 //
 
+import { PreloaderResponse } from "@/preload";
 import React, {
   createContext,
   Dispatch,
@@ -23,12 +24,15 @@ export type Credentials = {
   awsSecretAccessKey: string;
   awsRoleArn?: string;
   sessionToken?: string;
+  mfaCode?: string;
 };
 
 export type ElectronContext = {
   aws: Window["aws"];
   credentials?: Credentials;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
+  notification?: PreloaderResponse<unknown>;
+  setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
 };
 
@@ -44,6 +48,7 @@ export const blankCredentials = {
   awsSecretAccessKey: "",
   awsRoleArn: "",
   sessionToken: "",
+  mfaCode: "",
 };
 
 export const ElectronContextProvider = (props: Props): ReactElement => {
@@ -51,6 +56,12 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   // when those values are passed in, and also, remove them from the env when those
   // values are unset
   const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
+  const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
+    message: "Welcome!",
+    type: "info",
+    data: null,
+    details: null,
+  });
   const emptyCredentials = { ...blankCredentials };
   const clearCredentials = () => setCredentials(emptyCredentials);
 
@@ -60,6 +71,8 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         aws: window.aws,
         credentials,
         setCredentials,
+        notification,
+        setNotification,
         clearCredentials,
       }}
     >

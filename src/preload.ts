@@ -10,13 +10,13 @@ console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
 
-import { listTables } from "./utils/aws/dynamo/queries";
-import { loadSharedConfigFiles } from "@aws-sdk/shared-ini-file-loader";
+import { listTables } from "@/utils/aws/dynamo/queries";
+import { listAwsConfig } from "@/utils/aws/accounts/config";
 
 declare global {
   interface Window {
     aws: {
-      loadSharedConfigFiles: typeof loadSharedConfigFiles;
+      listAwsConfig: typeof listAwsConfig;
       listTables: typeof listTables;
     };
   }
@@ -31,6 +31,6 @@ export type PreloaderResponse<T> = {
 };
 
 contextBridge.exposeInMainWorld("aws", {
-  loadSharedConfigFiles,
+  listAwsConfig,
   listTables,
 });

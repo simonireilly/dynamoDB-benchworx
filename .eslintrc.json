@@ -13,7 +13,8 @@
           ".js",
           ".jsx"
         ]
-      }
+      },
+      "typescript": {}
     }
   },
   "rules": {
@@ -25,20 +26,26 @@
     ]
   },
   "plugins": [
-    "react-hooks"
+    "react-hooks",
+    "@typescript-eslint",
+    "import"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended"
   ],
-  "parser": "@typescript-eslint/parser",
   "overrides": [
     {
       "files": [
         "*.ts",
         "*.tsx"
       ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": "./"
+      },
       "extends": [
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",

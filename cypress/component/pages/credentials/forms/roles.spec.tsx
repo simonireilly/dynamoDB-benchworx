@@ -1,6 +1,6 @@
 import React from "react";
 import { mount } from "@cypress/react";
-import { Roles } from "./../../../../../src/pages/credentials/forms/roles";
+import { Roles } from "@/pages/credentials/forms/roles";
 
 describe("Role Component", () => {
   beforeEach(() => {

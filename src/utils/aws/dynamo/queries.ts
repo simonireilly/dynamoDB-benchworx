@@ -1,4 +1,4 @@
-import { PreloaderResponse } from "../../../preload";
+import { PreloaderResponse } from "@/preload";
 import { fromIni } from "@aws-sdk/credential-provider-ini";
 
 import {
@@ -12,7 +12,7 @@ import { roleAssumer } from "./role-assumer";
 // Assume profile and list tables
 export const listTables = async (
   profile: string,
-  mfaCode: string
+  mfaCode?: string
 ): Promise<PreloaderResponse<ListTablesCommandOutput>> => {
   let result;
 
@@ -24,8 +24,6 @@ export const listTables = async (
         return new Promise((resolve) => resolve(mfaCode));
       },
     });
-
-    console.info("Credentials", { credentials });
 
     const client = new DynamoDBClient({
       region: "eu-west-2",

@@ -11,8 +11,8 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import { Account } from "../forms/account";
-import { Roles } from "../forms/roles";
+import { Profile } from "@/pages/credentials/forms/profile";
+import { ManualCredentials } from "@/pages/credentials/forms/manual-credentials";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,18 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function getSteps() {
-  return [
-    "Select AWS Account Profile, or Access Keys",
-    "(Optional) Assume a Role using the chosen credentials",
-  ];
+  return ["Select AWS Account Profile", "Manually enter credentials"];
 }
 
 function getStepContent(step: number) {
   switch (step) {
     case 0:
-      return <Account />;
+      return <Profile />;
     case 1:
-      return <Roles />;
+      return <ManualCredentials />;
     default:
       return "Unknown step";
   }
