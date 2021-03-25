@@ -34,6 +34,8 @@ export type ElectronContext = {
   aws: Window["aws"];
   credentials?: Credentials;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
+  table: string;
+  setTable?: Dispatch<SetStateAction<string>>;
   notification?: PreloaderResponse<unknown>;
   setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
@@ -60,6 +62,7 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   // when those values are passed in, and also, remove them from the env when those
   // values are unset
   const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
+  const [table, setTable] = useState<string>("");
   const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
     message: "Welcome!",
     type: "info",
@@ -75,6 +78,8 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         aws: props.aws || window.aws,
         credentials,
         setCredentials,
+        table,
+        setTable,
         notification,
         setNotification,
         clearCredentials,

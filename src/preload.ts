@@ -10,7 +10,7 @@ console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
 
-import { listTables } from "@src/utils/aws/dynamo/queries";
+import { listTables, scan } from "@src/utils/aws/dynamo/queries";
 import { listAwsConfig } from "@src/utils/aws/accounts/config";
 
 declare global {
@@ -18,6 +18,7 @@ declare global {
     aws: {
       listAwsConfig: typeof listAwsConfig;
       listTables: typeof listTables;
+      scan: typeof scan;
     };
   }
 }
@@ -33,4 +34,5 @@ export type PreloaderResponse<T> = {
 contextBridge.exposeInMainWorld("aws", {
   listAwsConfig,
   listTables,
+  scan,
 });

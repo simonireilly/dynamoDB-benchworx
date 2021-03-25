@@ -6,20 +6,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  makeStyles,
-  createStyles,
-  Theme,
   Typography,
 } from "@material-ui/core";
 import { regions } from "@src/utils/aws/constants";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-    },
-  })
-);
+import { useStyles } from "@src/styles";
 
 export const Region = (): ReactElement => {
   const { setCredentials, credentials, setNotification } = useContext(
@@ -37,6 +27,7 @@ export const Region = (): ReactElement => {
           data-test="select-region"
           variant="filled"
           className={classes.formControl}
+          margin="dense"
         >
           <InputLabel htmlFor="aws-select-region">Choose region</InputLabel>
           <Select
@@ -61,13 +52,11 @@ export const Region = (): ReactElement => {
               id: "aws-select-region",
             }}
             autoWidth
+            margin="dense"
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
             {regions.map((region) => (
               <MenuItem value={region} key={region}>
-                <b>{region}</b>
+                {region}
               </MenuItem>
             ))}
           </Select>

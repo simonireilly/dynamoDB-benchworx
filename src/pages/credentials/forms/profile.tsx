@@ -12,23 +12,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  makeStyles,
-  createStyles,
-  Theme,
   FormHelperText,
   TextField,
   Typography,
   Button,
 } from "@material-ui/core";
 import { SafeProfile } from "@src/utils/aws/accounts/config";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-    },
-  })
-);
+import { useStyles } from "../../../styles";
 
 export const Profile = (): ReactElement => {
   const {
@@ -57,7 +47,11 @@ export const Profile = (): ReactElement => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const results = await listTables(credentials.profile, credentials.mfaCode);
+    const results = await listTables(
+      credentials.profile,
+      credentials.region,
+      credentials.mfaCode
+    );
     setNotification(results);
   };
 
@@ -71,6 +65,7 @@ export const Profile = (): ReactElement => {
           data-test="select-profile"
           variant="filled"
           className={classes.formControl}
+          margin="dense"
         >
           <InputLabel htmlFor="aws-select-profile">Choose Profile</InputLabel>
           <Select
@@ -93,10 +88,8 @@ export const Profile = (): ReactElement => {
               id: "aws-select-profile",
             }}
             autoWidth
+            margin="dense"
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
             {config &&
               config.map(({ profile, assumeRole, mfa }) => (
                 <MenuItem
