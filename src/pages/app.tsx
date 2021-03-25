@@ -1,14 +1,15 @@
+import { Notification } from "../components/notification";
 import React, { ReactElement } from "react";
-import { ElectronContextProvider } from "./contexts/electron-context";
+import { ElectronContextProvider } from "../contexts/electron-context";
 
-import { Credentials } from "./credentials";
+import { Steps } from "./credentials/steps";
 
 export const App = (): ReactElement => {
   return (
     <ElectronContextProvider>
       <>
-        Contains the renderer
-        <Credentials />
+        <Steps />
+        <Notification />
       </>
     </ElectronContextProvider>
   );

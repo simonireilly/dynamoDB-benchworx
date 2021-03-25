@@ -1,3 +1,5 @@
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+
 module.exports = {
   /**
    * This is the main entry point for your application, it's the first file
@@ -10,5 +12,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css", ".json"],
+
+    plugins: [new TsconfigPathsPlugin({})],
   },
 };

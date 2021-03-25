@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "module": "commonjs",
     "skipLibCheck": true,
     "jsx": "react",
@@ -11,13 +11,25 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "types": [
+      "jest",
+      "@cypress/react",
+      "@aws-sdk/types"
+    ],
     "paths": {
+      "@src/*": [
+        "./src/*"
+      ],
+      "@cy/*": [
+        "./cypress/*"
+      ],
       "*": [
         "node_modules/*"
       ],
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "cypress/**/*"
   ]
 }

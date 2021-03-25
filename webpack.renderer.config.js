@@ -1,6 +1,9 @@
 // eslint-disable
 const rules = require("./webpack.rules");
 const plugins = require("./webpack.plugins");
+const {
+  default: TsconfigPathsPlugin,
+} = require("tsconfig-paths-webpack-plugin");
 
 rules.push({
   test: /\.css$/,
@@ -14,5 +17,6 @@ module.exports = {
   plugins: plugins,
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx", ".css"],
+    plugins: [new TsconfigPathsPlugin({})],
   },
 };
