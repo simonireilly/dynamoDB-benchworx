@@ -1,20 +1,15 @@
 import React from "react";
 import { mount } from "@cypress/react";
-import { Steps } from "@/pages/credentials/steps";
-import { blankCredentials, ElectronStore } from "@/contexts/electron-context";
+import { Steps } from "@src/pages/credentials/steps";
+import { ElectronContextProvider } from "@src/contexts/electron-context";
+import { mockAws } from "@cy/support/mocks";
 
 describe("Steps Component", () => {
   beforeEach(() => {
     mount(
-      <ElectronStore.Provider value={{ credentials: blankCredentials }}>
+      <ElectronContextProvider aws={{ ...mockAws }}>
         <Steps />
-      </ElectronStore.Provider>
+      </ElectronContextProvider>
     );
-  });
-  it("has steps for selecting aws profile or access keys", () => {
-    // Within here we assert the child component is mounted
-  });
-  it("has steps for aliasing to a role", () => {
-    // Within here we assert the child component is mounted
   });
 });

@@ -1,9 +1,9 @@
-import { ElectronStore } from "@/contexts/electron-context";
+import { ElectronStore } from "@src/contexts/electron-context";
 import { Divider, Snackbar } from "@material-ui/core";
 import { Alert, Color } from "@material-ui/lab";
-import React, { useContext } from "react";
+import React, { ReactElement, useContext } from "react";
 
-export const Notification = () => {
+export const Notification = (): ReactElement => {
   const { notification } = useContext(ElectronStore);
 
   if (!notification) return <></>;

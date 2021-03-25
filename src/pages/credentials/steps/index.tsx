@@ -11,8 +11,8 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import { Profile } from "@/pages/credentials/forms/profile";
-import { ManualCredentials } from "@/pages/credentials/forms/manual-credentials";
+import { Profile } from "@src/pages/credentials/forms/profile";
+import { ManualCredentials } from "@src/pages/credentials/forms/manual-credentials";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

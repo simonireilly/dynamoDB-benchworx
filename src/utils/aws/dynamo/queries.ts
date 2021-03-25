@@ -1,4 +1,4 @@
-import { PreloaderResponse } from "@/preload";
+import { PreloaderResponse } from "@src/preload";
 import { fromIni } from "@aws-sdk/credential-provider-ini";
 
 import {

@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { ElectronStore } from "@/contexts/electron-context";
+import { ElectronStore } from "@src/contexts/electron-context";
 
 import {
   FormControl,
@@ -20,7 +20,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import { SafeProfile } from "@/utils/aws/accounts/config";
+import { SafeProfile } from "@src/utils/aws/accounts/config";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,27 +111,31 @@ export const Profile = (): ReactElement => {
             profile edit the <em>`~/.aws</em> files
           </FormHelperText>
         </FormControl>
-        <FormControl className={classes.formControl}>
-          <Typography>AWS Multifactor Authentication (MFA) Code</Typography>
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            id="aws-mfa-code"
-            label="AWS MFA Code"
-            variant="filled"
-            required={mfaRequire}
-            value={credentials.mfaCode}
-            onChange={(e) =>
-              setCredentials((current) => ({
-                ...current,
-                ...{
-                  mfaCode: String(e.target.value),
-                },
-              }))
-            }
-            type="text"
-          />
-        </FormControl>
+        {mfaRequire && (
+          <>
+            <FormControl className={classes.formControl}>
+              <Typography>AWS Multifactor Authentication (MFA) Code</Typography>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <TextField
+                id="aws-mfa-code"
+                label="AWS MFA Code"
+                variant="filled"
+                required={mfaRequire}
+                value={credentials.mfaCode}
+                onChange={(e) =>
+                  setCredentials((current) => ({
+                    ...current,
+                    ...{
+                      mfaCode: String(e.target.value),
+                    },
+                  }))
+                }
+                type="text"
+              />
+            </FormControl>
+          </>
+        )}
         <FormControl className={classes.formControl}>
           <div>
             <Button type="submit" variant="contained" color="secondary">

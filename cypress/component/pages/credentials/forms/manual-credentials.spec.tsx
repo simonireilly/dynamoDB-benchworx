@@ -1,18 +1,19 @@
 import React from "react";
 import { mount } from "@cypress/react";
-import { Profile } from "@/pages/credentials/forms/profile";
+import { ManualCredentials } from "@src/pages/credentials/forms/manual-credentials";
+import { mockAws } from "@cy/support/mocks";
+import { ElectronContextProvider } from "@src/contexts/electron-context";
 
-describe("Role Component", () => {
+describe("Manual Credentials Component", () => {
   beforeEach(() => {
-    mount(<Profile />);
-  });
-  it("renders a select for available roles", () => {
-    cy.contains("Choose AWS Account Role").should("be.visible");
-  });
-
-  it("allows direct input of an ARN for the role", () => {
-    cy.get("#aws-role-arn").type(
-      "arn:aws:iam::account-id:role/role-name-with-path"
+    mount(
+      <ElectronContextProvider aws={{ ...mockAws }}>
+        <ManualCredentials />
+      </ElectronContextProvider>
     );
+  });
+  it("has space to enter credentials", () => {
+    cy.contains("AWS Access Key ID").should("be.visible");
+    cy.contains("AWS Secret Access Key").should("be.visible");
   });
 });

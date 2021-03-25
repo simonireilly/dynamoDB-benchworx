@@ -3,7 +3,7 @@
 // Wrap entire application and access the current authenticated user for this context
 //
 
-import { PreloaderResponse } from "@/preload";
+import { PreloaderResponse } from "@src/preload";
 import React, {
   createContext,
   Dispatch,
@@ -15,6 +15,7 @@ import React, {
 interface Props {
   children: ReactElement;
   aws?: Window["aws"];
+  value?: ElectronContext;
 }
 
 export type Credentials = {

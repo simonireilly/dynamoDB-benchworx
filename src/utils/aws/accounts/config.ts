@@ -1,7 +1,7 @@
 // Get Credentials from the local INI files and organize into types for sign in
 // which are safe for persistance and use inside the DOM
 
-import { PreloaderResponse } from "@/preload";
+import { PreloaderResponse } from "@src/preload";
 import {
   loadSharedConfigFiles,
   Profile,

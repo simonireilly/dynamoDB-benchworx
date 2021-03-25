@@ -1,4 +1,4 @@
-const injectDevServer = require("@cypress/react/plugins/load-webpack");
+import injectDevServer from "@cypress/react/plugins/load-webpack";
 
 /// <reference types="cypress" />
 // ***********************************************************
@@ -17,15 +17,13 @@ const injectDevServer = require("@cypress/react/plugins/load-webpack");
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
 
-  // TODO replace with valid webpack config path
+module.exports = (
+  on: Cypress.PluginEvents,
+  config: Cypress.PluginConfigOptions
+) => {
   config.env.webpackFilename = "./webpack.main.config.js";
-  require("@cypress/code-coverage/task")(on, config);
-  require("@cypress/react/plugins/load-webpack")(on, config);
 
   injectDevServer(on, config);
-  return config; // IMPORTANT to return the config object
+  return config;
 };

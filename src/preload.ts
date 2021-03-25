@@ -10,8 +10,8 @@ console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
 
-import { listTables } from "@/utils/aws/dynamo/queries";
-import { listAwsConfig } from "@/utils/aws/accounts/config";
+import { listTables } from "@src/utils/aws/dynamo/queries";
+import { listAwsConfig } from "@src/utils/aws/accounts/config";
 
 declare global {
   interface Window {

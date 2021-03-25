@@ -4,7 +4,7 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { ElectronStore } from "@/contexts/electron-context";
+import { ElectronStore } from "@src/contexts/electron-context";
 
 import {
   FormControl,

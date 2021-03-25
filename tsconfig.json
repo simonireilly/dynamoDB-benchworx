@@ -17,8 +17,11 @@
       "@aws-sdk/types"
     ],
     "paths": {
-      "@/*": [
+      "@src/*": [
         "./src/*"
+      ],
+      "@cy/*": [
+        "./cypress/*"
       ],
       "*": [
         "node_modules/*"
