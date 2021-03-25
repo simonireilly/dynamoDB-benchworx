@@ -13,6 +13,8 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 800,
     width: 1200,
+    title: "DynamoWorx",
+    icon: "",
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

@@ -1,8 +1,8 @@
 {
-  "name": "dynamodb-benchworx",
-  "productName": "dynamodb-benchworx",
+  "name": "BenchWorx",
+  "productName": "BenchWorx",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

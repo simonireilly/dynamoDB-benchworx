@@ -11,8 +11,6 @@ export const DataTable = (): ReactElement => {
   } = useContext(ElectronStore);
   const [rows, setRows] = useState<Awaited<ReturnType<typeof scan>>["data"]>();
 
-  console.info({ rows });
-
   useEffect(() => {
     const init = async () => {
       const results = await scan(
@@ -31,10 +29,22 @@ export const DataTable = (): ReactElement => {
 
   if (!rows) return <></>;
 
-  const columns: GridColDef[] =
+  const allKeys: string[] = [];
+
+  const everyKey: string[] =
     rows &&
     rows.Items.length &&
-    Object.keys(rows.Items[0]).map((key) => ({
+    rows.Items.reduce((acc, item) => {
+      Object.keys(item).forEach((key) => {
+        if (acc.indexOf(key) < 0) acc.push(key);
+      });
+
+      return acc;
+    }, allKeys);
+
+  const columns: GridColDef[] =
+    everyKey &&
+    everyKey.map((key) => ({
       field: key,
     }));
 
@@ -43,12 +53,15 @@ export const DataTable = (): ReactElement => {
     rows.Items.length &&
     rows.Items.map((row) => ({
       id: row.path,
-      ...row,
+      ...Object.entries(row).reduce((acc, [key, value]) => {
+        acc[key] = JSON.stringify(value);
+        return acc;
+      }, {}),
     }));
 
   return (
     <div style={{ height: 400, width: "100%" }}>
-      {rows && rows.Items.length && (
+      {rows && rows.Items.length > 0 && (
         <DataGrid
           rows={rowData}
           columns={columns}
