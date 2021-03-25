@@ -9,13 +9,7 @@ export const DataTable = (): ReactElement => {
     credentials,
     table,
   } = useContext(ElectronStore);
-  const [rows, setRows] = useState<Awaited<ReturnType<typeof scan>>["data"]>({
-    Items: [
-      {
-        path: "one",
-      },
-    ],
-  });
+  const [rows, setRows] = useState<Awaited<ReturnType<typeof scan>>["data"]>();
 
   console.info({ rows });
 
@@ -62,7 +56,6 @@ export const DataTable = (): ReactElement => {
           checkboxSelection
         />
       )}
-      <pre>{JSON.stringify(rows, null, 2)}</pre>
     </div>
   );
 };

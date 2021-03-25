@@ -14,7 +14,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.ts|*.tsx": "lint"
+    "*.ts|*.tsx": "yarn lint"
   },
   "keywords": [],
   "author": {

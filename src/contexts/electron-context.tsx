@@ -41,7 +41,7 @@ export type ElectronContext = {
   clearCredentials?: () => void;
 };
 
-export const ElectronStore = createContext<ElectronContext>({
+export const ElectronStore = createContext<Partial<ElectronContext>>({
   aws: window.aws,
 });
 

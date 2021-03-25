@@ -39,7 +39,6 @@ export const WorkBench = (): ReactElement => {
       <Typography>Workbench</Typography>
       <Grid container>
         <Grid container>
-          <Grid item xs={10}></Grid>
           <Grid item xs={2}>
             <SelectTable tables={tables?.TableNames || []} />
           </Grid>
@@ -48,7 +47,6 @@ export const WorkBench = (): ReactElement => {
           <DataTable />
         </Grid>
       </Grid>
-      <pre>{JSON.stringify(tables, null, 2)}</pre>
     </Paper>
   );
 };
