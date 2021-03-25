@@ -14,7 +14,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.ts|*.tsx": "eslint"
+    "*.ts|*.tsx": "lint"
   },
   "keywords": [],
   "author": {
