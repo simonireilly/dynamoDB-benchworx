@@ -13,7 +13,7 @@ describe("Manual Credentials Component", () => {
     );
   });
   it("has space to enter credentials", () => {
-    cy.contains("AWS Access Key ID").should("be.visible");
-    cy.contains("AWS Secret Access Key").should("be.visible");
+    cy.dataTest("input-aws-access-key-id").should("be.visible");
+    cy.dataTest("input-aws-secret-access-key").should("be.visible");
   });
 });

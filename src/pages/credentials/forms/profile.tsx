@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 300,
     },
   })
 );
@@ -68,10 +67,12 @@ export const Profile = (): ReactElement => {
         <FormControl className={classes.formControl}>
           <Typography>Select an available profile</Typography>
         </FormControl>
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel htmlFor="aws-select-profile">
-            Choose AWS Account Profile
-          </InputLabel>
+        <FormControl
+          data-test="select-profile"
+          variant="filled"
+          className={classes.formControl}
+        >
+          <InputLabel htmlFor="aws-select-profile">Choose Profile</InputLabel>
           <Select
             value={credentials.profile}
             onChange={async (e) => {
@@ -114,10 +115,8 @@ export const Profile = (): ReactElement => {
         {mfaRequire && (
           <>
             <FormControl className={classes.formControl}>
-              <Typography>AWS Multifactor Authentication (MFA) Code</Typography>
-            </FormControl>
-            <FormControl className={classes.formControl}>
               <TextField
+                margin="dense"
                 id="aws-mfa-code"
                 label="AWS MFA Code"
                 variant="filled"

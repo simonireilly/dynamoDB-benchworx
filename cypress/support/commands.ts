@@ -25,3 +25,13 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 export default {};
+declare global {
+  // eslint-disable-next-line
+  namespace Cypress {
+    interface Chainable<Subject> {
+      dataTest(dataTest: string): Chainable<JQuery<HTMLElement>>;
+    }
+  }
+}
+
+Cypress.Commands.add("dataTest", (id) => cy.get(`[data-test="${id}"]`));

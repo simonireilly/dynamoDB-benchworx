@@ -24,6 +24,7 @@ export type Credentials = {
   awsAccountId: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
+  region: string;
   awsRoleArn?: string;
   sessionToken?: string;
   mfaCode?: string;
@@ -48,6 +49,7 @@ export const blankCredentials = {
   awsAccountId: "",
   awsAccessKeyId: "",
   awsSecretAccessKey: "",
+  region: "",
   awsRoleArn: "",
   sessionToken: "",
   mfaCode: "",

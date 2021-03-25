@@ -12,11 +12,13 @@ import { roleAssumer } from "./role-assumer";
 // Assume profile and list tables
 export const listTables = async (
   profile: string,
+  region: string,
   mfaCode?: string
 ): Promise<PreloaderResponse<ListTablesCommandOutput>> => {
   let result;
 
   try {
+    // Credential fetching needs to be cached
     const credentials = fromIni({
       profile,
       roleAssumer,
@@ -26,12 +28,14 @@ export const listTables = async (
     });
 
     const client = new DynamoDBClient({
-      region: "eu-west-2",
+      region,
       credentials,
       logger: console,
     });
 
-    result = await client.send(new ListTablesCommand({ Limit: 10 }));
+    console.info(credentials);
+
+    result = await client.send(new ListTablesCommand({ Limit: 100 }));
 
     return {
       type: "success",

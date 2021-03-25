@@ -7,7 +7,7 @@ export const roleAssumer = async (
   params: AssumeRoleParams
 ): Promise<Credentials> => {
   const client = new STSClient({
-    region: "eu-west-2",
+    region: "us-east-1",
     credentials: sourceCredentials,
   });
 
