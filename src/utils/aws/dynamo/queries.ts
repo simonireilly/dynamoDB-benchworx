@@ -1,41 +1,31 @@
 import { PreloaderResponse } from "@src/preload";
-import { fromIni } from "@aws-sdk/credential-provider-ini";
 
 import {
+  DescribeTableCommand,
+  DescribeTableCommandOutput,
   DynamoDBClient,
   ListTablesCommand,
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 
 import { DynamoDBDocument, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
-
-import { roleAssumer } from "./role-assumer";
+import { fetchCredentials } from "@src/utils/aws/credentials";
 
 // Assume profile and list tables
 export const listTables = async (
   profile: string,
-  region: string,
-  mfaCode?: string
+  region: string
 ): Promise<PreloaderResponse<ListTablesCommandOutput>> => {
   let result;
 
   try {
-    // Credential fetching needs to be cached
-    const credentials = fromIni({
-      profile,
-      roleAssumer,
-      mfaCodeProvider: (mfaSerial: string): Promise<string> => {
-        return new Promise((resolve) => resolve(mfaCode));
-      },
-    });
+    const credentials = fetchCredentials(profile);
 
     const client = new DynamoDBClient({
       region,
       credentials,
       logger: console,
     });
-
-    console.info(credentials);
 
     result = await client.send(new ListTablesCommand({ Limit: 100 }));
 
@@ -55,23 +45,15 @@ export const listTables = async (
   }
 };
 
-export const scan = async (
+export const describeTable = async (
   profile: string,
   region: string,
-  tableName: string,
-  mfaCode?: string
-): Promise<PreloaderResponse<ScanCommandOutput>> => {
+  tableName: string
+): Promise<PreloaderResponse<DescribeTableCommandOutput>> => {
   let result;
 
   try {
-    // Credential fetching needs to be cached
-    const credentials = fromIni({
-      profile,
-      roleAssumer,
-      mfaCodeProvider: (mfaSerial: string): Promise<string> => {
-        return new Promise((resolve) => resolve(mfaCode));
-      },
-    });
+    const credentials = fetchCredentials(profile);
 
     const client = new DynamoDBClient({
       region,
@@ -79,11 +61,45 @@ export const scan = async (
       logger: console,
     });
 
-    console.info(credentials);
+    result = await client.send(
+      new DescribeTableCommand({ TableName: tableName })
+    );
+
+    return {
+      type: "success",
+      data: result,
+      message: `Fetched table schema for ${tableName}`,
+      details: `Table item count: ${result.Table.ItemCount}`,
+    };
+  } catch (e) {
+    return {
+      type: "error",
+      data: null,
+      message: `Unable to list tables for profile: ${profile}`,
+      details: e.message,
+    };
+  }
+};
+
+export const scan = async (
+  profile: string,
+  region: string,
+  tableName: string
+): Promise<PreloaderResponse<ScanCommandOutput>> => {
+  let result;
+
+  try {
+    const credentials = fetchCredentials(profile);
+
+    const client = new DynamoDBClient({
+      region,
+      credentials,
+      logger: console,
+    });
 
     const documentClient = DynamoDBDocument.from(client);
 
-    result = await documentClient.scan({ TableName: tableName, Limit: 10 });
+    result = await documentClient.scan({ TableName: tableName, Limit: 50 });
 
     return {
       type: "success",

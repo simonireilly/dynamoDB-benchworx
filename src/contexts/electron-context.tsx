@@ -4,6 +4,7 @@
 //
 
 import { PreloaderResponse } from "@src/preload";
+import { describeTable } from "@src/utils/aws/dynamo/queries";
 import React, {
   createContext,
   Dispatch,
@@ -34,8 +35,10 @@ export type ElectronContext = {
   aws: Window["aws"];
   credentials?: Credentials;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
-  table: string;
-  setTable?: Dispatch<SetStateAction<string>>;
+  table: Awaited<ReturnType<typeof describeTable>>["data"];
+  setTable?: Dispatch<
+    SetStateAction<Awaited<ReturnType<typeof describeTable>>["data"]>
+  >;
   notification?: PreloaderResponse<unknown>;
   setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
@@ -62,7 +65,9 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   // when those values are passed in, and also, remove them from the env when those
   // values are unset
   const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
-  const [table, setTable] = useState<string>("");
+  const [table, setTable] = useState<
+    Awaited<ReturnType<typeof describeTable>>["data"]
+  >();
   const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
     message: "Welcome!",
     type: "info",

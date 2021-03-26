@@ -1,16 +1,50 @@
-import React, { ReactElement, useContext } from "react";
+import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
-import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+} from "@material-ui/core";
 import { useStyles } from "@src/styles/index";
 
-export const SelectTable = ({ tables }: { tables: string[] }): ReactElement => {
-  const { setNotification, table, setTable } = useContext(ElectronStore);
+export const SelectTable = (): ReactElement => {
+  const {
+    setNotification,
+    table,
+    setTable,
+    aws: { listTables, describeTable },
+    credentials,
+  } = useContext(ElectronStore);
   const classes = useStyles();
+
+  const [tables, setTables] = useState<
+    Awaited<ReturnType<typeof listTables>>["data"]["TableNames"]
+  >([]);
+
+  const fetchTables = async () => {
+    const results = await listTables(credentials.profile, credentials.region);
+    setNotification(results);
+    setTables(results.data.TableNames);
+  };
+
+  useEffect(() => {
+    fetchTables();
+  }, [credentials]);
 
   return (
     <div>
       <form noValidate autoComplete="off">
+        <FormControl
+          data-test="refresh-tables"
+          variant="filled"
+          className={classes.formControl}
+          margin="dense"
+        >
+          <Button onClick={() => fetchTables()}>Refresh</Button>
+        </FormControl>
         <FormControl
           data-test="select-region"
           variant="filled"
@@ -24,14 +58,14 @@ export const SelectTable = ({ tables }: { tables: string[] }): ReactElement => {
             margin="dense"
             value={table}
             onChange={async (e) => {
-              const table = String(e.target.value);
-              setTable(table);
-              setNotification({
-                type: "success",
-                message: `Selected table changed to ${table}`,
-                details: null,
-                data: null,
-              });
+              const tableName = String(e.target.value);
+              const results = await describeTable(
+                credentials.profile,
+                credentials.region,
+                tableName
+              );
+              setNotification(results);
+              if (results.type === "success") setTable(results.data);
             }}
             inputProps={{
               name: "Choose table",

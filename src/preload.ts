@@ -10,12 +10,15 @@ console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
 
-import { listTables, scan } from "@src/utils/aws/dynamo/queries";
+import { describeTable, listTables, scan } from "@src/utils/aws/dynamo/queries";
 import { listAwsConfig } from "@src/utils/aws/accounts/config";
+import { authenticator } from "@src/utils/aws/credentials";
 
 declare global {
   interface Window {
     aws: {
+      authenticator: typeof authenticator;
+      describeTable: typeof describeTable;
       listAwsConfig: typeof listAwsConfig;
       listTables: typeof listTables;
       scan: typeof scan;
@@ -32,6 +35,8 @@ export type PreloaderResponse<T> = {
 };
 
 contextBridge.exposeInMainWorld("aws", {
+  authenticator,
+  describeTable,
   listAwsConfig,
   listTables,
   scan,

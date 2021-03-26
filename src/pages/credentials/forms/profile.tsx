@@ -22,7 +22,7 @@ import { useStyles } from "../../../styles";
 
 export const Profile = (): ReactElement => {
   const {
-    aws: { listTables, listAwsConfig },
+    aws: { authenticator, listAwsConfig },
     setCredentials,
     credentials,
     setNotification,
@@ -47,11 +47,10 @@ export const Profile = (): ReactElement => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const results = await listTables(
-      credentials.profile,
-      credentials.region,
-      credentials.mfaCode
-    );
+    const results = await authenticator({
+      profile: credentials.profile,
+      mfaCode: credentials.mfaCode,
+    });
     setNotification(results);
   };
 

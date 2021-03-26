@@ -28,12 +28,12 @@ export const App = (): ReactElement => {
             <Typography>DynamoWorx</Typography>
           </Toolbar>
         </AppBar>
-        <Grid container spacing={5} className={classes.workbench}>
-          <Grid item xs={3}>
+        <Grid container spacing={1} className={classes.workbench}>
+          <Grid item xs={3} md={2}>
             <Region />
             <Profile />
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={8} md={10}>
             <WorkBench />
           </Grid>
         </Grid>
