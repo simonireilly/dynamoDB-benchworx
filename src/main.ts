@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { is } from "electron-util";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -26,7 +27,7 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (is.development) mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

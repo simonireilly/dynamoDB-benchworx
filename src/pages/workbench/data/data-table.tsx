@@ -1,12 +1,27 @@
 import React, { ReactElement, useContext, useEffect, useState } from "react";
+import ReactJson from "react-json-view";
 import {
   DataGrid,
   GridColDef,
   GridRowData,
   GridValueFormatterParams,
-  GridValueGetterParams,
 } from "@material-ui/data-grid";
 import { ElectronStore } from "@src/contexts/electron-context";
+import {
+  AppBar,
+  Box,
+  Card,
+  Paper,
+  Tab,
+  Tabs,
+  Typography,
+} from "@material-ui/core";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
 
 // Takes in a table name and performs a scan to get the data
 export const DataTable = (): ReactElement => {
@@ -19,27 +34,39 @@ export const DataTable = (): ReactElement => {
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
 
-  console.info(hashKey);
+  const [value, setValue] = useState("one");
+
+  const [tabPanels, setTabPanels] = useState<
+    { tab: ReactElement; panel: ReactElement }[]
+  >([]);
+
+  const handleChange = (event: React.ChangeEvent, newValue: string) => {
+    console.info({ newValue });
+    setValue(newValue);
+  };
 
   useEffect(() => {
     const init = async () => {
+      if (table?.Table?.TableName === undefined) return;
+
       const results = await scan(
         credentials.profile,
         credentials.region,
-        table.Table.TableName
+        table?.Table?.TableName
       );
 
       setHashKey(
-        table.Table.KeySchema.find((el) => el.KeyType === "HASH").AttributeName
+        table.Table.KeySchema.find((el) => el.KeyType === "HASH")?.AttributeName
       );
       setSortKey(
-        table.Table.KeySchema.find((el) => el.KeyType === "RANGE").AttributeName
+        table.Table.KeySchema.find((el) => el.KeyType === "RANGE")
+          ?.AttributeName
       );
       setRows(results.data);
     };
 
     init();
-  }, [table]);
+  }, [table?.Table?.TableName]);
 
   if (!rows) return <></>;
 
@@ -58,11 +85,8 @@ export const DataTable = (): ReactElement => {
     everyKey &&
     everyKey.map((key) => ({
       field: key,
-      resizable: true,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        if (Array.isArray(params.value) || typeof params.value === "object")
-          return JSON.stringify(params.value, null, 2);
-      },
+      valueFormatter: (params: GridValueFormatterParams) =>
+        JSON.stringify(params.value, null, 2),
     }));
 
   const rowData =
@@ -74,17 +98,83 @@ export const DataTable = (): ReactElement => {
       ...row,
     }));
 
+  const a11yProps = (index: any) => {
+    return {
+      id: `wrapped-tab-${index}`,
+      "aria-controls": `wrapped-tabpanel-${index}`,
+    };
+  };
+
+  function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+    console.info(value);
+    console.info(index);
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`wrapped-tabpanel-${index}`}
+        aria-labelledby={`wrapped-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <Paper style={{ height: "80vh", width: "100%" }}>
+      <Card style={{ height: "35vh" }}>
+        <AppBar position="static">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="selected item tabs"
+          >
+            {tabPanels && tabPanels.map(({ tab }) => tab)}
+          </Tabs>
+        </AppBar>
+        {tabPanels && tabPanels.map(({ panel }) => panel)}
+      </Card>
       {rows && rows.Items.length > 0 && (
         <DataGrid
           rows={rowData}
+          onRowSelected={(params) => {
+            setTabPanels((current) => [
+              ...current,
+              {
+                tab: (
+                  <Tab
+                    value={params.data[hashKey]}
+                    label={params.data[hashKey]}
+                    key={params.data[hashKey]}
+                    {...a11yProps(params.data[hashKey])}
+                  />
+                ),
+                panel: (
+                  <TabPanel
+                    value={value}
+                    index={params.data[hashKey]}
+                    key={params.data[hashKey]}
+                  >
+                    <ReactJson src={params.data} />
+                  </TabPanel>
+                ),
+              },
+            ]);
+            setValue(params.data[hashKey]);
+          }}
           columns={columns}
-          pageSize={25}
+          pageSize={5}
           checkboxSelection
+          autoHeight
           density="compact"
         />
       )}
-    </div>
+    </Paper>
   );
 };

@@ -2,38 +2,19 @@ import { Notification } from "../components/notification";
 import React, { ReactElement } from "react";
 import { ElectronContextProvider } from "../contexts/electron-context";
 
-import {
-  AppBar,
-  Grid,
-  IconButton,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Grid } from "@material-ui/core";
 import { WorkBench } from "./workbench";
-import { Region } from "./credentials/forms/region";
-import { Profile } from "./credentials/forms/profile";
 import { useStyles } from "@src/styles";
+import { Header } from "./layout/header";
 
 export const App = (): ReactElement => {
   const classes = useStyles();
   return (
     <ElectronContextProvider>
       <>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography>DynamoWorx</Typography>
-          </Toolbar>
-        </AppBar>
+        <Header />
         <Grid container spacing={1} className={classes.workbench}>
-          <Grid item xs={3} md={2}>
-            <Region />
-            <Profile />
-          </Grid>
-          <Grid item xs={8} md={10}>
+          <Grid item xs={12}>
             <WorkBench />
           </Grid>
         </Grid>

@@ -7,6 +7,7 @@ import {
   Select,
   MenuItem,
   Button,
+  NativeSelect,
 } from "@material-ui/core";
 import { useStyles } from "@src/styles/index";
 
@@ -27,12 +28,12 @@ export const SelectTable = (): ReactElement => {
   const fetchTables = async () => {
     const results = await listTables(credentials.profile, credentials.region);
     setNotification(results);
-    setTables(results.data.TableNames);
+    if (results.type === "success") setTables(results.data.TableNames);
   };
 
   useEffect(() => {
     fetchTables();
-  }, [credentials]);
+  }, [credentials.region, credentials.profile]);
 
   return (
     <div>
@@ -51,12 +52,10 @@ export const SelectTable = (): ReactElement => {
           className={classes.formControl}
           margin="dense"
         >
-          <InputLabel htmlFor="aws-dynamo-select-table">
-            Choose table
-          </InputLabel>
-          <Select
+          <InputLabel htmlFor="aws-dynamo-select-table">table</InputLabel>
+          <NativeSelect
             margin="dense"
-            value={table}
+            value={table?.Table?.TableName}
             onChange={async (e) => {
               const tableName = String(e.target.value);
               const results = await describeTable(
@@ -71,14 +70,13 @@ export const SelectTable = (): ReactElement => {
               name: "Choose table",
               id: "aws-dynamo-select-table",
             }}
-            autoWidth
           >
             {tables.map((table) => (
-              <MenuItem value={table} key={table}>
+              <option value={table} key={table}>
                 {table}
-              </MenuItem>
+              </option>
             ))}
-          </Select>
+          </NativeSelect>
         </FormControl>
       </form>
     </div>
