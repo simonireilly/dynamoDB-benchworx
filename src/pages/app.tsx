@@ -13,7 +13,7 @@ export const App = (): ReactElement => {
     <ElectronContextProvider>
       <>
         <Header />
-        <Grid container spacing={1} className={classes.workbench}>
+        <Grid container className={classes.workbench}>
           <Grid item xs={12}>
             <WorkBench />
           </Grid>

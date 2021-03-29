@@ -1,26 +1,19 @@
 import React, { ReactElement, useContext, useEffect, useState } from "react";
-import ReactJson from "react-json-view";
 import {
   DataGrid,
   GridColDef,
   GridRowData,
+  GridRowSelectedParams,
   GridValueFormatterParams,
 } from "@material-ui/data-grid";
 import { ElectronStore } from "@src/contexts/electron-context";
-import {
-  AppBar,
-  Box,
-  Card,
-  Paper,
-  Tab,
-  Tabs,
-  Typography,
-} from "@material-ui/core";
+import { Card, Paper } from "@material-ui/core";
+import Editor from "@monaco-editor/react";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
+interface Item {
+  name: string;
+  language: string;
+  value: string;
 }
 
 // Takes in a table name and performs a scan to get the data
@@ -34,16 +27,8 @@ export const DataTable = (): ReactElement => {
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
 
-  const [value, setValue] = useState("one");
-
-  const [tabPanels, setTabPanels] = useState<
-    { tab: ReactElement; panel: ReactElement }[]
-  >([]);
-
-  const handleChange = (event: React.ChangeEvent, newValue: string) => {
-    console.info({ newValue });
-    setValue(newValue);
-  };
+  const [items, setItems] = useState<{ [key: string]: Item }>({});
+  const [activeItem, setActiveItem] = useState<string>();
 
   useEffect(() => {
     const init = async () => {
@@ -89,85 +74,63 @@ export const DataTable = (): ReactElement => {
         JSON.stringify(params.value, null, 2),
     }));
 
+  const constructCompositeKey = (row: GridRowData) =>
+    [row[hashKey], row[sortKey]].filter(Boolean).join("-");
+
   const rowData =
     rows &&
     rows.Items.length &&
     rows.Items.map<GridRowData>((row) => ({
       // Assign ID to the pk attribute
-      id: [row[hashKey], row[sortKey]].filter(Boolean).join("-"),
+      id: constructCompositeKey(row),
       ...row,
     }));
 
-  const a11yProps = (index: any) => {
-    return {
-      id: `wrapped-tab-${index}`,
-      "aria-controls": `wrapped-tabpanel-${index}`,
-    };
+  const handleRowSelection = (params: GridRowSelectedParams) => {
+    const { data, isSelected } = params;
+    const name = constructCompositeKey(data);
+
+    setItems((current) => {
+      if (isSelected) {
+        return {
+          ...current,
+          [name]: {
+            value: JSON.stringify(data, null, 2),
+            name,
+            language: "json",
+          },
+        };
+      } else {
+        delete current[name];
+        return current;
+      }
+    });
+    setActiveItem(constructCompositeKey(params.data));
   };
 
-  function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-    console.info(value);
-    console.info(index);
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`wrapped-tabpanel-${index}`}
-        aria-labelledby={`wrapped-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <Paper style={{ height: "80vh", width: "100%" }}>
+    <Paper style={{ height: "88vh", width: "100%" }}>
       <Card style={{ height: "35vh" }}>
-        <AppBar position="static">
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="selected item tabs"
+        {Object.keys(items).map((name) => (
+          <button
+            disabled={activeItem === name}
+            key={name}
+            onClick={() => setActiveItem(name)}
           >
-            {tabPanels && tabPanels.map(({ tab }) => tab)}
-          </Tabs>
-        </AppBar>
-        {tabPanels && tabPanels.map(({ panel }) => panel)}
+            {name}
+          </button>
+        ))}
+        <Editor
+          theme="vs-dark"
+          path={items[activeItem]?.name}
+          defaultLanguage={items[activeItem]?.language}
+          defaultValue={items[activeItem]?.value}
+        />
       </Card>
       {rows && rows.Items.length > 0 && (
         <DataGrid
           rows={rowData}
-          onRowSelected={(params) => {
-            setTabPanels((current) => [
-              ...current,
-              {
-                tab: (
-                  <Tab
-                    value={params.data[hashKey]}
-                    label={params.data[hashKey]}
-                    key={params.data[hashKey]}
-                    {...a11yProps(params.data[hashKey])}
-                  />
-                ),
-                panel: (
-                  <TabPanel
-                    value={value}
-                    index={params.data[hashKey]}
-                    key={params.data[hashKey]}
-                  >
-                    <ReactJson src={params.data} />
-                  </TabPanel>
-                ),
-              },
-            ]);
-            setValue(params.data[hashKey]);
-          }}
+          onRowSelected={handleRowSelection}
           columns={columns}
           pageSize={5}
           checkboxSelection
