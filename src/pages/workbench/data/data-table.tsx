@@ -53,8 +53,6 @@ export const DataTable = (): ReactElement => {
     init();
   }, [table?.Table?.TableName]);
 
-  if (!rows) return <></>;
-
   const everyKey: string[] =
     rows &&
     rows.Items.length &&
@@ -132,7 +130,7 @@ export const DataTable = (): ReactElement => {
           rows={rowData}
           onRowSelected={handleRowSelection}
           columns={columns}
-          pageSize={5}
+          pageSize={25}
           checkboxSelection
           autoHeight
           density="compact"

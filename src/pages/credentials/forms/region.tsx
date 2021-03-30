@@ -1,14 +1,12 @@
 import React, { ReactElement, useContext } from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
-import { FormControl, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { regions } from "@src/utils/aws/constants";
 
 export const Region = (): ReactElement => {
-  const { setCredentials, credentials, setNotification } = useContext(
-    ElectronStore
-  );
+  const { setCredentials, credentials } = useContext(ElectronStore);
   return (
     <Autocomplete
       id="autocomplete-region"

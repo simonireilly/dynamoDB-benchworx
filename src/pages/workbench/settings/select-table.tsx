@@ -1,15 +1,15 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  NativeSelect,
-} from "@material-ui/core";
+import { FormControl, Button, TextField } from "@material-ui/core";
 import { useStyles } from "@src/styles/index";
+import { Autocomplete } from "@material-ui/lab";
 
 export const SelectTable = (): ReactElement => {
   const {
@@ -35,6 +35,16 @@ export const SelectTable = (): ReactElement => {
     fetchTables();
   }, [credentials.region, credentials.profile]);
 
+  const handleTableSelect = async (e: any, newInputValue: string) => {
+    const results = await describeTable(
+      credentials.profile,
+      credentials.region,
+      newInputValue
+    );
+    setNotification(results);
+    if (results.type === "success") setTable(results.data);
+  };
+
   return (
     <div>
       <form noValidate autoComplete="off">
@@ -46,38 +56,24 @@ export const SelectTable = (): ReactElement => {
         >
           <Button onClick={() => fetchTables()}>Refresh</Button>
         </FormControl>
-        <FormControl
-          data-test="select-region"
-          variant="filled"
-          className={classes.formControl}
-          margin="dense"
-        >
-          <InputLabel htmlFor="aws-dynamo-select-table">table</InputLabel>
-          <NativeSelect
-            margin="dense"
-            value={table?.Table?.TableName}
-            onChange={async (e) => {
-              const tableName = String(e.target.value);
-              const results = await describeTable(
-                credentials.profile,
-                credentials.region,
-                tableName
-              );
-              setNotification(results);
-              if (results.type === "success") setTable(results.data);
-            }}
-            inputProps={{
-              name: "Choose table",
-              id: "aws-dynamo-select-table",
-            }}
-          >
-            {tables.map((table) => (
-              <option value={table} key={table}>
-                {table}
-              </option>
-            ))}
-          </NativeSelect>
-        </FormControl>
+        <Autocomplete
+          id="autocomplete-table"
+          size="small"
+          options={tables}
+          value={table?.Table?.TableName}
+          onChange={handleTableSelect}
+          autoComplete
+          autoHighlight
+          autoSelect
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Table"
+              variant="outlined"
+              margin="dense"
+            />
+          )}
+        />
       </form>
     </div>
   );

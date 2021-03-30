@@ -36,6 +36,7 @@ export const listTables = async (
       details: `Table count: ${result.TableNames.length}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,

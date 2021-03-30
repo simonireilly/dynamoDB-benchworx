@@ -1,24 +1,14 @@
-import React, {
-  ChangeEvent,
-  ReactElement,
-  SyntheticEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
 import {
   FormControl,
   InputLabel,
   NativeSelect,
-  FormHelperText,
   TextField,
-  Typography,
 } from "@material-ui/core";
 import { SafeProfile } from "@src/utils/aws/accounts/config";
 import { useStyles } from "../../../styles";
-import { Autocomplete } from "@material-ui/lab";
 
 export const Profile = (): ReactElement => {
   const {
@@ -78,11 +68,14 @@ export const Profile = (): ReactElement => {
     }));
 
     setMfaRequired(mfaIsRequired);
+    setOpen(mfaIsRequired);
 
     if (!mfaIsRequired) {
       await authenticator({ profile, mfaCode: "" });
     }
   };
+
+  const [open, setOpen] = useState(mfaRequire);
 
   return (
     <div>
@@ -113,6 +106,7 @@ export const Profile = (): ReactElement => {
             ))}
         </NativeSelect>
       </FormControl>
+
       <TextField
         data-test="input-mfa"
         margin="dense"

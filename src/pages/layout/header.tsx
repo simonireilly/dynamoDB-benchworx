@@ -2,15 +2,14 @@ import { AppBar, Toolbar, Typography } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { Profile } from "@src/pages/credentials/forms/profile";
 import { Region } from "@src/pages/credentials/forms/region";
-import { SelectTable } from "../workbench/settings/select-table";
 
 export const Header = (): ReactElement => (
-  <AppBar position="static" color="transparent">
-    <Toolbar variant="dense">
-      <Typography>DynamoWorx</Typography>
+  <AppBar position="static" color="default">
+    <Toolbar variant="dense" disableGutters>
+      &nbsp;
       <Region />
       <Profile />
-      <SelectTable />
+      <Typography>DynamoWorx</Typography>
     </Toolbar>
   </AppBar>
 );
