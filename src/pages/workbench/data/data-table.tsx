@@ -32,7 +32,11 @@ export const DataTable = (): ReactElement => {
 
   useEffect(() => {
     const init = async () => {
-      if (table?.Table?.TableName === undefined) return;
+      if (table?.Table?.TableName === undefined)
+        return setRows({
+          Items: [],
+          $metadata: {},
+        });
 
       const results = await scan(
         credentials.profile,

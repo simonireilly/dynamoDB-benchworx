@@ -12,8 +12,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "types": [
+      "node",
       "jest",
-      "@cypress/react",
+      "nock",
       "@aws-sdk/types"
     ],
     "paths": {
@@ -31,5 +32,9 @@
   "include": [
     "src/**/*",
     "cypress/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

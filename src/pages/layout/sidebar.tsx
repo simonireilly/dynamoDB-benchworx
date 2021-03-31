@@ -1,6 +1,7 @@
 import { Grid, Paper } from "@material-ui/core";
 import React, { ReactElement } from "react";
 import { SelectTable } from "../workbench/settings/select-table";
+import { TableDescription } from "../workbench/settings/table-description";
 
 export const Sidebar = (): ReactElement => {
   return (
@@ -8,6 +9,7 @@ export const Sidebar = (): ReactElement => {
       <Grid item xs={12} style={{ height: "50%" }}>
         <Paper>
           <SelectTable />
+          <TableDescription />
         </Paper>
       </Grid>
       <Grid item xs={12} style={{ height: "50%" }}>

@@ -44,6 +44,12 @@ export const authenticator = async ({
   }
 };
 
-export const fetchCredentials = (profile: string): Credentials => {
+export const fetchCredentials = async (
+  profile: string
+): Promise<Credentials> => {
+  if (!inMemoryCache[profile]) {
+    await authenticator({ profile, mfaCode: "" });
+  }
+
   return inMemoryCache[profile];
 };

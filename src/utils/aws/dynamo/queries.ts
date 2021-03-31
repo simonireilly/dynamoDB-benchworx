@@ -5,11 +5,53 @@ import {
   DescribeTableCommandOutput,
   DynamoDBClient,
   ListTablesCommand,
+  ListTablesCommandInput,
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 
 import { DynamoDBDocument, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
+import { Tab } from "@material-ui/icons";
+
+const clientConstructor = async (profile: string, region: string) => {
+  const credentials = await fetchCredentials(profile);
+
+  const client = new DynamoDBClient({
+    region,
+    credentials,
+    logger: console,
+  });
+
+  return client;
+};
+
+const fetchAllTables = async (
+  client: DynamoDBClient,
+  previousResult?: ListTablesCommandOutput
+): Promise<ListTablesCommandOutput> => {
+  let TableNames: string[] = [];
+  const params: ListTablesCommandInput = {
+    Limit: 100,
+  };
+
+  if (previousResult?.LastEvaluatedTableName)
+    params.ExclusiveStartTableName = previousResult.LastEvaluatedTableName;
+
+  const command = new ListTablesCommand(params);
+  const results = await client.send(command);
+
+  if (results.TableNames.length === 100) {
+    TableNames = [...TableNames, ...results.TableNames];
+    const result = await fetchAllTables(client, results);
+    TableNames = [...TableNames, ...result.TableNames];
+    return {
+      ...result,
+      TableNames,
+    };
+  } else {
+    return results;
+  }
+};
 
 // Assume profile and list tables
 export const listTables = async (
@@ -19,15 +61,9 @@ export const listTables = async (
   let result;
 
   try {
-    const credentials = fetchCredentials(profile);
+    const client = await clientConstructor(profile, region);
 
-    const client = new DynamoDBClient({
-      region,
-      credentials,
-      logger: console,
-    });
-
-    result = await client.send(new ListTablesCommand({ Limit: 100 }));
+    result = await fetchAllTables(client);
 
     return {
       type: "success",
@@ -54,13 +90,7 @@ export const describeTable = async (
   let result;
 
   try {
-    const credentials = fetchCredentials(profile);
-
-    const client = new DynamoDBClient({
-      region,
-      credentials,
-      logger: console,
-    });
+    const client = await clientConstructor(profile, region);
 
     result = await client.send(
       new DescribeTableCommand({ TableName: tableName })
@@ -90,13 +120,7 @@ export const scan = async (
   let result;
 
   try {
-    const credentials = fetchCredentials(profile);
-
-    const client = new DynamoDBClient({
-      region,
-      credentials,
-      logger: console,
-    });
+    const client = await clientConstructor(profile, region);
 
     const documentClient = DynamoDBDocument.from(client);
 
