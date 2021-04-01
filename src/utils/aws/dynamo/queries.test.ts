@@ -1,14 +1,25 @@
+import { mocked } from "ts-jest";
 import { listTables } from "./queries";
 import nock from "nock";
 import {
   ListTablesCommandInput,
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
+import { fetchCredentials } from "@src/utils/aws/credentials";
+
+jest.mock("@src/utils/aws/credentials");
+
+const mockedFetchCredentials = mocked(fetchCredentials);
 
 describe("Queries", () => {
   beforeEach(() => {
     jest.resetAllMocks();
     nock.disableNetConnect();
+
+    mockedFetchCredentials.mockResolvedValueOnce({
+      accessKeyId: "test",
+      secretAccessKey: "secret",
+    });
   });
 
   describe("listTables", () => {
@@ -28,7 +39,7 @@ describe("Queries", () => {
       );
     });
 
-    fit("recursively fetches tables when greater than 100 tables found", async () => {
+    it("recursively fetches tables when greater than 100 tables found", async () => {
       const TableNames1 = [...Array.from({ length: 100 }, (x, i) => ++i)].map(
         (key: number) => `Table-${key}`
       );

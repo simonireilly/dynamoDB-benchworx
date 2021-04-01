@@ -11,7 +11,6 @@ import {
 
 import { DynamoDBDocument, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
-import { Tab } from "@material-ui/icons";
 
 const clientConstructor = async (profile: string, region: string) => {
   const credentials = await fetchCredentials(profile);
@@ -72,7 +71,6 @@ export const listTables = async (
       details: `Table count: ${result.TableNames.length}`,
     };
   } catch (e) {
-    console.error(e);
     return {
       type: "error",
       data: null,

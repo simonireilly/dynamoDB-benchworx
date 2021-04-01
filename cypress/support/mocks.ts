@@ -24,4 +24,24 @@ export const mockAws: Window["aws"] = {
       ],
       details: null,
     }),
+  scan: async (profile: string, region: string, tableName: string) => {
+    return {
+      data: {
+        $metadata: {},
+        Count: 2,
+        ScannedCount: 2,
+        ConsumedCapacity: 2,
+        LastEvaluatedKey: null,
+        Items: [
+          {
+            pk: "magic-1",
+            sk: "super",
+          },
+        ],
+      },
+      details: null,
+      message: "",
+      type: "success",
+    };
+  },
 };

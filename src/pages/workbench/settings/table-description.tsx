@@ -5,15 +5,15 @@ import React, { ReactElement, useContext } from "react";
 export const TableDescription = (): ReactElement => {
   const { table } = useContext(ElectronStore);
 
+  console.info(table);
+
   return (
     <List dense>
       <ListSubheader>Info</ListSubheader>
       <ListItem>
         <ListItemText
           primary="Created Date"
-          secondary={
-            table ? table.Table.CreationDateTime.toUTCString() : "None"
-          }
+          secondary={table ? table.Table.CreationDateTime : "None"}
         />
         <ListItemText
           primary="Item Count"
