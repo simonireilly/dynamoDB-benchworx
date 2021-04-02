@@ -30,6 +30,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     listSection: {
       backgroundColor: "inherit",
     },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: "#fff",
+    },
     "@global": {
       "*::-webkit-scrollbar": {
         width: "2px",

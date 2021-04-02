@@ -1,11 +1,22 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
 import {
+  Backdrop,
+  Box,
+  Button,
+  Card,
   FormControl,
   InputLabel,
   NativeSelect,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { SafeProfile } from "@src/utils/aws/accounts/config";
 import { useStyles } from "../../../styles";
@@ -35,15 +46,15 @@ export const Profile = (): ReactElement => {
     setup();
   }, []);
 
-  useEffect(() => {
-    const auth = async () => {
-      if (mfaRequire && credentials.mfaCode.length === 6)
-        await authenticator({
-          profile: credentials.profile,
-          mfaCode: credentials.mfaCode,
-        });
-    };
+  const auth = async () => {
+    if (mfaRequire && credentials.mfaCode.length === 6)
+      await authenticator({
+        profile: credentials.profile,
+        mfaCode: credentials.mfaCode,
+      });
+  };
 
+  useEffect(() => {
     auth();
   }, [credentials.profile, credentials.mfaCode]);
 
@@ -77,11 +88,65 @@ export const Profile = (): ReactElement => {
 
   const [open, setOpen] = useState(mfaRequire);
 
+  const handleMfaSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    auth();
+    setOpen(false);
+  };
+
   return (
     <div>
+      <Backdrop className={classes.backdrop} open={open}>
+        <Card>
+          <Box p={4} display="flex" flexDirection="column">
+            <form onSubmit={handleMfaSubmit}>
+              <Typography>
+                Multi-Factor Authentication is required for this account.
+              </Typography>
+              <br />
+              <TextField
+                data-test="input-mfa"
+                margin="dense"
+                id="aws-mfa-code"
+                label="AWS MFA Code"
+                variant="outlined"
+                required={mfaRequire}
+                value={credentials.mfaCode}
+                focused={mfaRequire && !credentials.mfaCode}
+                onChange={(e) =>
+                  setCredentials((current) => ({
+                    ...current,
+                    ...{
+                      mfaCode: String(e.target.value),
+                    },
+                  }))
+                }
+                type="text"
+              />
+              <br />
+              <Box
+                display="flex"
+                flexDirection="row"
+                justifyContent="space-between"
+              >
+                <Button variant="contained" type="submit" color="primary">
+                  Authenticate
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </form>
+          </Box>
+        </Card>
+      </Backdrop>
       <FormControl
         data-test="select-profile"
-        variant="filled"
+        variant="outlined"
         className={classes.formControl}
         margin="dense"
       >
@@ -94,6 +159,7 @@ export const Profile = (): ReactElement => {
             id: "aws-select-profile",
           }}
           margin="dense"
+          variant="outlined"
         >
           {config &&
             config.map(({ profile, assumeRole, mfa }) => (
@@ -106,27 +172,6 @@ export const Profile = (): ReactElement => {
             ))}
         </NativeSelect>
       </FormControl>
-
-      <TextField
-        data-test="input-mfa"
-        margin="dense"
-        id="aws-mfa-code"
-        label="AWS MFA Code"
-        variant="filled"
-        required={mfaRequire}
-        disabled={!mfaRequire}
-        value={credentials.mfaCode}
-        focused={mfaRequire && !credentials.mfaCode}
-        onChange={(e) =>
-          setCredentials((current) => ({
-            ...current,
-            ...{
-              mfaCode: String(e.target.value),
-            },
-          }))
-        }
-        type="text"
-      />
     </div>
   );
 };

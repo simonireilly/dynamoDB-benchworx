@@ -8,6 +8,10 @@ export const ItemViewer = (): ReactElement => {
   const { item } = useContext(ElectronStore);
 
   return (
-    <Editor defaultLanguage="json" value={JSON.stringify(item, null, 2)} />
+    <Editor
+      defaultLanguage="json"
+      value={JSON.stringify(item, null, 2)}
+      defaultValue="// None selected"
+    />
   );
 };

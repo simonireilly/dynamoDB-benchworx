@@ -1,9 +1,14 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { ElectronStore } from "@src/contexts/electron-context";
 
 import { TextField, Grid, IconButton } from "@material-ui/core";
 import { Refresh } from "@material-ui/icons";
-import { useStyles } from "@src/styles/index";
 import { Autocomplete } from "@material-ui/lab";
 
 export const SelectTable = (): ReactElement => {
@@ -14,7 +19,6 @@ export const SelectTable = (): ReactElement => {
     aws: { listTables, describeTable },
     credentials,
   } = useContext(ElectronStore);
-  const classes = useStyles();
 
   const [tables, setTables] = useState<
     Awaited<ReturnType<typeof listTables>>["data"]["TableNames"]
@@ -30,7 +34,10 @@ export const SelectTable = (): ReactElement => {
     fetchTables();
   }, [credentials.region, credentials.profile]);
 
-  const handleTableSelect = async (e: any, newInputValue: string) => {
+  const handleTableSelect = async (
+    e: SyntheticEvent,
+    newInputValue: string
+  ) => {
     if (newInputValue === null) {
       setTable(null);
       setNotification({
@@ -73,7 +80,7 @@ export const SelectTable = (): ReactElement => {
         />
       </Grid>
       <Grid item xs={2}>
-        <IconButton onClick={() => fetchTables()}>
+        <IconButton color="primary" onClick={() => fetchTables()}>
           <Refresh />
         </IconButton>
       </Grid>

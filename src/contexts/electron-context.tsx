@@ -56,7 +56,7 @@ export const blankCredentials = {
   awsAccountId: "",
   awsAccessKeyId: "",
   awsSecretAccessKey: "",
-  region: "",
+  region: "us-east-1",
   awsRoleArn: "",
   sessionToken: "",
   mfaCode: "",
