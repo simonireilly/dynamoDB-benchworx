@@ -1,4 +1,4 @@
-import { mocked } from "ts-jest";
+import { mocked } from "ts-jest/utils";
 import { listTables } from "./queries";
 import nock from "nock";
 import {

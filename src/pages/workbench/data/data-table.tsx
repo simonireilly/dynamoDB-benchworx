@@ -7,28 +7,22 @@ import {
   GridValueFormatterParams,
 } from "@material-ui/data-grid";
 import { ElectronStore } from "@src/contexts/electron-context";
-import { Card, Paper } from "@material-ui/core";
-import Editor from "@monaco-editor/react";
+import { Paper } from "@material-ui/core";
+import { useStyles } from "@src/styles";
 
-interface Item {
-  name: string;
-  language: string;
-  value: string;
-}
-
-// Takes in a table name and performs a scan to get the data
+// TODO: Rep[lace with react table as we will not use the complex functions
+// we currently only need an onclick to set the current item
 export const DataTable = (): ReactElement => {
   const {
     aws: { scan },
     credentials,
     table,
+    setItem,
   } = useContext(ElectronStore);
+  const classes = useStyles();
   const [rows, setRows] = useState<Awaited<ReturnType<typeof scan>>["data"]>();
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
-
-  const [items, setItems] = useState<{ [key: string]: Item }>({});
-  const [activeItem, setActiveItem] = useState<string>();
 
   useEffect(() => {
     const init = async () => {
@@ -89,54 +83,19 @@ export const DataTable = (): ReactElement => {
     }));
 
   const handleRowSelection = (params: GridRowSelectedParams) => {
-    const { data, isSelected } = params;
-    const name = constructCompositeKey(data);
-
-    setItems((current) => {
-      if (isSelected) {
-        return {
-          ...current,
-          [name]: {
-            value: JSON.stringify(data, null, 2),
-            name,
-            language: "json",
-          },
-        };
-      } else {
-        delete current[name];
-        return current;
-      }
-    });
-    setActiveItem(constructCompositeKey(params.data));
+    console.info("selected");
+    const { data } = params;
+    setItem(data);
   };
 
   return (
-    <Paper style={{ height: "88vh", width: "100%" }}>
-      <Card style={{ height: "35vh" }}>
-        {Object.keys(items).map((name) => (
-          <button
-            disabled={activeItem === name}
-            key={name}
-            onClick={() => setActiveItem(name)}
-          >
-            {name}
-          </button>
-        ))}
-        <Editor
-          theme="vs-dark"
-          path={items[activeItem]?.name}
-          defaultLanguage={items[activeItem]?.language}
-          defaultValue={items[activeItem]?.value}
-        />
-      </Card>
+    <Paper className={classes.workbench}>
       {rows && rows.Items.length > 0 && (
         <DataGrid
           rows={rowData}
           onRowSelected={handleRowSelection}
           columns={columns}
           pageSize={25}
-          checkboxSelection
-          autoHeight
           density="compact"
         />
       )}

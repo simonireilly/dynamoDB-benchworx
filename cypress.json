@@ -1,8 +1,8 @@
 {
   "experimentalComponentTesting": true,
   "testFiles": "**/*.spec.{js,ts,jsx,tsx}",
-  "viewportWidth": 1200,
-  "viewportHeight": 800,
+  "viewportWidth": 1366,
+  "viewportHeight": 760,
   "env": {
     "reactDevtools": true,
     "coverage": false

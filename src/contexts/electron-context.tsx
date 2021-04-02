@@ -33,12 +33,14 @@ export type Credentials = {
 
 export type ElectronContext = {
   aws: Window["aws"];
-  credentials?: Credentials;
+  credentials?: Partial<Credentials>;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
   table: Awaited<ReturnType<typeof describeTable>>["data"];
   setTable?: Dispatch<
     SetStateAction<Awaited<ReturnType<typeof describeTable>>["data"]>
   >;
+  item: { [key: string]: any };
+  setItem?: Dispatch<SetStateAction<{ [key: string]: any }>>;
   notification?: PreloaderResponse<unknown>;
   setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
@@ -68,6 +70,7 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   const [table, setTable] = useState<
     Awaited<ReturnType<typeof describeTable>>["data"]
   >();
+  const [item, setItem] = useState<{ [key: string]: any }>();
   const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
     message: "Welcome!",
     type: "info",
@@ -85,6 +88,8 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         setCredentials,
         table,
         setTable,
+        item,
+        setItem,
         notification,
         setNotification,
         clearCredentials,

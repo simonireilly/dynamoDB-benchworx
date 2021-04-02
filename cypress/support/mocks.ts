@@ -32,12 +32,12 @@ export const mockAws: Window["aws"] = {
         ScannedCount: 2,
         ConsumedCapacity: 2,
         LastEvaluatedKey: null,
-        Items: [
-          {
-            pk: "magic-1",
-            sk: "super",
-          },
-        ],
+        Items: [...Array.from({ length: 100 }, (x, i) => ++i)].map(
+          (key: number) => ({
+            pk: `user-${key}`,
+            sk: new Date(Date.now()),
+          })
+        ),
       },
       details: null,
       message: "",
