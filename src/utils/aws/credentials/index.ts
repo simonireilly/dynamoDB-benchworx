@@ -50,6 +50,5 @@ export const fetchCredentials = async (
   if (!inMemoryCache[profile]) {
     await authenticator({ profile, mfaCode: "" });
   }
-
   return inMemoryCache[profile];
 };

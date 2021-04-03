@@ -17,16 +17,17 @@ const createWindow = (): void => {
     title: "DynamoWorx",
     icon: "",
     webPreferences: {
+      // Arbitrary code execution is prevented
       nodeIntegration: false,
+      // Isolate node primitives to a dedicated context
       contextIsolation: true,
+      // Preload any node_modules to be used
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
 
-  // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Open the DevTools.
   if (is.development) mainWindow.webContents.openDevTools();
 };
 

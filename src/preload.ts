@@ -4,7 +4,7 @@
 // those methods to the window.
 //
 // When writing those methods, we should encapsulate the actual calls to client,
-// preventing injection and/or privilege escalation
+// preventing injection and/or privilege escalation.
 
 console.info("Preloading node modules");
 
@@ -34,6 +34,8 @@ export type PreloaderResponse<T> = {
   details: string | null;
 };
 
+// Expose the AWS object to over the context bridge to allow invocation of the attached
+// methods in the renderer processes.
 contextBridge.exposeInMainWorld("aws", {
   authenticator,
   describeTable,

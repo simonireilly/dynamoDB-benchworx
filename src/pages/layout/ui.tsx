@@ -9,7 +9,7 @@ export const UI = (): ReactElement => {
   return (
     <>
       <Header />
-      <Box m={2} pt={3}>
+      <Box m={1} p={1}>
         <Grid container spacing={1}>
           <Grid item xs={4} md={3} lg={2}>
             <Sidebar />

@@ -83,7 +83,6 @@ export const DataTable = (): ReactElement => {
     }));
 
   const handleRowSelection = (params: GridRowSelectedParams) => {
-    console.info("selected");
     const { data } = params;
     setItem(data);
   };

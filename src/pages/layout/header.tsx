@@ -9,7 +9,8 @@ export const Header = (): ReactElement => (
       &nbsp;
       <Region />
       <Profile />
-      <Typography>DynamoWorx</Typography>
     </Toolbar>
+
+    <Typography>DynamoWorx</Typography>
   </AppBar>
 );
