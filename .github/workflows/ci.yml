@@ -32,7 +32,7 @@ jobs:
         run: yarn cypress run
 
       - uses: actions/upload-artifact@v1
-        if: failure()
+        if: always()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
@@ -43,31 +43,5 @@ jobs:
           name: cypress-videos
           path: cypress/videos
 
-  build:
-    runs-on: ${{ matrix.os }}
-
-    needs: test
-
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-modules-v2-
-            ${{ runner.os }}
-
-      - name: Install packages
-        run: yarn install
-
-      - name: Packaging
+      - name: Package Ubuntu
         run: yarn package
