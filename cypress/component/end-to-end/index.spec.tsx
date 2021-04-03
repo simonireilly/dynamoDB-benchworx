@@ -31,6 +31,6 @@ describe("Manual Credentials Component", () => {
   it("renders the application in full", () => {
     cy.wait(1000);
 
-    cy.screenshot("latest");
+    cy.matchImageSnapshot("latest");
   });
 });

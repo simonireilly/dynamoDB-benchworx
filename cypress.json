@@ -7,5 +7,6 @@
     "reactDevtools": true,
     "coverage": false
   },
-  "componentFolder": "cypress/component"
+  "componentFolder": "cypress/component",
+  "trashAssetsBeforeRuns": true
 }

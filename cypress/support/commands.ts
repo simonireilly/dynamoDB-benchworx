@@ -25,6 +25,9 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 export default {};
+
+import { addMatchImageSnapshotCommand } from "cypress-image-snapshot/command";
+
 declare global {
   // eslint-disable-next-line
   namespace Cypress {
@@ -35,3 +38,4 @@ declare global {
 }
 
 Cypress.Commands.add("dataTest", (id) => cy.get(`[data-test="${id}"]`));
+addMatchImageSnapshotCommand();

@@ -6,5 +6,4 @@ Building an open source dynamoDB CRUD application:
 - 🚀 Uses the aws-sdk v3 to have a small footprint
 - ✔️ Exposes multiple ways to configure aws
 
-
-## Example
+![User interface with tables and items](cypress/snapshots/end-to-end/index.spec.tsx/login.snap.png)
