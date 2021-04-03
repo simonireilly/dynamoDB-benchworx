@@ -4,7 +4,7 @@ import { ElectronStore } from "@src/contexts/electron-context";
 import { UI } from "@src/pages/layout/ui";
 import { mockAws } from "@cy/support/mocks";
 
-describe("Manual Credentials Component", () => {
+describe("End to End tests", () => {
   beforeEach(() => {
     cy.fixture("describe-table").then((table) =>
       mount(

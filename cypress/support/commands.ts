@@ -38,4 +38,9 @@ declare global {
 }
 
 Cypress.Commands.add("dataTest", (id) => cy.get(`[data-test="${id}"]`));
-addMatchImageSnapshotCommand();
+addMatchImageSnapshotCommand({
+  failureThreshold: 0.01,
+  failureThresholdType: "percent",
+  customDiffConfig: { threshold: 0.1 },
+  capture: "viewport",
+});
