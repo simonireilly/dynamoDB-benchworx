@@ -25,8 +25,12 @@ jobs:
       - name: Linting
         run: yarn lint
 
-      - name: Testing
-        run: yarn test
+      - name: Trial coverage
+        uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          test-command: "yarn test"
 
       - name: Extract branch name
         shell: bash
