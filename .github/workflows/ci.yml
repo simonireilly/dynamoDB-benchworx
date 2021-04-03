@@ -31,6 +31,12 @@ jobs:
       - name: Cypress
         run: yarn cypress run
 
+      - name: Append current screenshot
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: |
+            ![Current snapshot](https://github.com/simonireilly/dynamoDB-benchworx/blob/${{ github.head_ref }}/cypress/snapshots/end-to-end/index.spec.tsx/login.snap.png)
+
       - uses: actions/upload-artifact@v1
         if: always()
         with:
