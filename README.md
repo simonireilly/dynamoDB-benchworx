@@ -13,7 +13,8 @@ Open source GUI for working with AWS DynamoDB.
 
 ## Features
 
-- Authenticate using AWS `~/.aws/credentials`
-- Edit dynamoDB records as JSON using monaco editor
+- [x] Authenticate using AWS `~/.aws/credentials`
+- [x] Show dynamoDB records as JSON using monaco editor
+- [ ] Edit dynamoDB records as JSON using monaco editor
 - [ ] Query and Scan on Primary, Local Secondary, and Global Secondary indexes
 - [ ] Use the aws-sdk for dynamo to design and test queries inside an authenticated REPL
