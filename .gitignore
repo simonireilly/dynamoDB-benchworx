@@ -87,3 +87,11 @@ typings/
 
 # Electron-Forge
 out/
+
+# Husky
+.husky/
+
+# Cypress debug outputs
+cypress/videos/
+cypress/screenshots/
+__diff_output__

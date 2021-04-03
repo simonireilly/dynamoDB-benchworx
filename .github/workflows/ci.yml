@@ -1,0 +1,53 @@
+name: Lint/Test/Build
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-modules-v2-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-v2-
+            ${{ runner.os }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Linting
+        run: yarn lint
+
+      - name: Testing
+        run: yarn test
+
+      - name: Cypress
+        run: yarn cypress run
+
+      - name: Append current screenshot
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: |
+            ![Current snapshot](https://github.com/simonireilly/dynamoDB-benchworx/blob/${{ github.head_ref }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
+
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+
+      - name: Package Ubuntu
+        run: yarn package

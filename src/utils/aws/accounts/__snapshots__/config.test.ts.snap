@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`listAwsConfig loads the local config 1`] = `
+Array [
+  Object {
+    "assumeRole": false,
+    "mfa": false,
+    "profile": "simpleProfile",
+    "region": "us-east-1",
+  },
+  Object {
+    "assumeRole": false,
+    "mfa": false,
+    "profile": "cgu",
+    "region": undefined,
+  },
+  Object {
+    "assumeRole": false,
+    "mfa": false,
+    "profile": "default",
+    "region": "eu-west-2",
+  },
+  Object {
+    "assumeRole": true,
+    "mfa": true,
+    "profile": "mfaRoleAssume",
+    "region": "eu-west-1",
+  },
+]
+`;

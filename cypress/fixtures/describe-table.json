@@ -1,0 +1,335 @@
+{
+  "$metadata": {
+    "httpStatusCode": 200,
+    "requestId": "OHENH1C6CRPH9A8LSEF8OSFAEFVV4KQNSO5AEMVJF66Q9ASUAAJG",
+    "attempts": 1,
+    "totalRetryDelay": 0
+  },
+  "Table": {
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "date_of_birth_and_initial",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "date_of_birth_and_initial_and_postcode",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "live_record_status",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "joined_date",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "pk",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "status_expiry_date",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sanitised_first_name",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sanitised_last_name",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sanitised_user_id",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sanitised_postcode",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "sk",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "source_hash",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "expiry_date",
+        "AttributeType": "S"
+      }
+    ],
+    "BillingModeSummary": {
+      "BillingMode": "PAY_PER_REQUEST",
+      "LastUpdateToPayPerRequestDateTime": "2021-03-23T14:19:11.040Z"
+    },
+    "CreationDateTime": "2021-03-23T14:19:11.040Z",
+    "GlobalSecondaryIndexes": [
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/date-of-birth-initial-first-name",
+        "IndexName": "date-of-birth-initial-first-name",
+        "IndexSizeBytes": 6107,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "date_of_birth_and_initial",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "sanitised_first_name",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/status-renewal-date",
+        "IndexName": "status-renewal-date",
+        "IndexSizeBytes": 3600,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "status",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "renewal_date",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/status-expiry-date",
+        "IndexName": "status-expiry-date",
+        "IndexSizeBytes": 3600,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "status",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "expiry-date",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/date-of-birth-initial-last-name",
+        "IndexName": "date-of-birth-initial-last-name",
+        "IndexSizeBytes": 6107,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "date_of_birth_and_initial",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "sanitised_last_name",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/joined-date",
+        "IndexName": "joined-date",
+        "IndexSizeBytes": 6107,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "joined_date",
+            "KeyType": "HASH"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/sanitised-user-id-sort-key",
+        "IndexName": "sanitised-user-id-sort-key",
+        "IndexSizeBytes": 6644,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 11,
+        "KeySchema": [
+          {
+            "AttributeName": "sanitised_user_id",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "sk",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/live-record-status-only",
+        "IndexName": "live-record-status-only",
+        "IndexSizeBytes": 4201,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 11,
+        "KeySchema": [
+          {
+            "AttributeName": "live_record_status",
+            "KeyType": "HASH"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/date-of-birth-initial-full-postcode",
+        "IndexName": "date-of-birth-initial-full-postcode",
+        "IndexSizeBytes": 6107,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "date_of_birth_and_initial_and_postcode",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "sanitised_first_name",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/date-of-birth-initial-partial-postcode",
+        "IndexName": "date-of-birth-initial-partial-postcode",
+        "IndexSizeBytes": 6107,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 10,
+        "KeySchema": [
+          {
+            "AttributeName": "date_of_birth_and_initial",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "sanitised_postcode",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      },
+      {
+        "IndexArn": "arn:aws:dynamodb:eu-west-2:022135462799:table/table-1/index/source-hash",
+        "IndexName": "source-hash",
+        "IndexSizeBytes": 0,
+        "IndexStatus": "ACTIVE",
+        "ItemCount": 0,
+        "KeySchema": [
+          {
+            "AttributeName": "source_hash",
+            "KeyType": "HASH"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+          "NumberOfDecreasesToday": 0,
+          "ReadCapacityUnits": 0,
+          "WriteCapacityUnits": 0
+        }
+      }
+    ],
+    "ItemCount": 331,
+    "KeySchema": [
+      {
+        "AttributeName": "pk",
+        "KeyType": "HASH"
+      },
+      {
+        "AttributeName": "sk",
+        "KeyType": "RANGE"
+      }
+    ],
+    "ProvisionedThroughput": {
+      "NumberOfDecreasesToday": 0,
+      "ReadCapacityUnits": 0,
+      "WriteCapacityUnits": 0
+    },
+    "SSEDescription": {
+      "KMSMasterKeyArn": "arn:aws:kms:eu-west-1:022135462799:key/eaa4d422-fb43-4af2-9e10-xxxxxxxxxxxx",
+      "SSEType": "KMS",
+      "Status": "ENABLED"
+    },
+    "TableArn": "arn:aws:dynamodb:eu-west-1:022135462799:table/table-1",
+    "TableId": "d6c2a5f8-be06-414d-937c-6bf290248127",
+    "TableName": "table-1",
+    "TableSizeBytes": 121377,
+    "TableStatus": "ACTIVE"
+  }
+}
