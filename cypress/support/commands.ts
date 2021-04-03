@@ -38,9 +38,19 @@ declare global {
 }
 
 Cypress.Commands.add("dataTest", (id) => cy.get(`[data-test="${id}"]`));
+
 addMatchImageSnapshotCommand({
   failureThreshold: 0.01,
   failureThresholdType: "percent",
   customDiffConfig: { threshold: 0.1 },
   capture: "viewport",
+});
+
+const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
+
+Cypress.on("uncaught:exception", (err) => {
+  /* returning false here prevents Cypress from failing the test */
+  if (resizeObserverLoopErrRe.test(err.message)) {
+    return false;
+  }
 });
