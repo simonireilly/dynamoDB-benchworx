@@ -35,7 +35,8 @@ jobs:
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            ![Current snapshot](https://github.com/simonireilly/dynamoDB-benchworx/blob/${{ github.head_ref }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
+            ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/main/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
+            ${{github.head_ref}}
 
       - uses: actions/upload-artifact@v1
         if: always()
