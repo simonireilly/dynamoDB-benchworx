@@ -28,15 +28,20 @@ jobs:
       - name: Testing
         run: yarn test
 
-      - name: Cypress
-        run: yarn cypress run
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
 
       - name: Append current screenshot
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/main/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
-            ${{github.head_ref}}
+            # Current UI
+            ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ steps.extract_branch.outputs.branch }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
+
+      - name: Cypress
+        run: yarn cypress run
 
       - uses: actions/upload-artifact@v1
         if: always()
