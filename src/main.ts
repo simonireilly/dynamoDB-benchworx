@@ -1,4 +1,5 @@
 import { app, BrowserWindow } from "electron";
+import { is } from "electron-util";
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -13,18 +14,21 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 800,
     width: 1200,
+    title: "DynamoWorx",
+    icon: "",
     webPreferences: {
+      // Arbitrary code execution is prevented
       nodeIntegration: false,
+      // Isolate node primitives to a dedicated context
       contextIsolation: true,
+      // Preload any node_modules to be used
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
 
-  // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (is.development) mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

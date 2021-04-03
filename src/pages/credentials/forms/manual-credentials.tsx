@@ -54,6 +54,7 @@ export const ManualCredentials = (): ReactElement => {
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField
+            data-test="input-aws-access-key-id"
             id="aws-access-key-id"
             label="AWS Access Key ID"
             variant="filled"
@@ -85,6 +86,7 @@ export const ManualCredentials = (): ReactElement => {
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField
+            data-test="input-aws-secret-access-key"
             id="aws-secret-access-key"
             label="AWS Secret Access Key"
             variant="filled"

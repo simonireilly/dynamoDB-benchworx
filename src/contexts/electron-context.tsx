@@ -4,6 +4,7 @@
 //
 
 import { PreloaderResponse } from "@src/preload";
+import { describeTable } from "@src/utils/aws/dynamo/queries";
 import React, {
   createContext,
   Dispatch,
@@ -24,6 +25,7 @@ export type Credentials = {
   awsAccountId: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
+  region: string;
   awsRoleArn?: string;
   sessionToken?: string;
   mfaCode?: string;
@@ -31,14 +33,20 @@ export type Credentials = {
 
 export type ElectronContext = {
   aws: Window["aws"];
-  credentials?: Credentials;
+  credentials?: Partial<Credentials>;
   setCredentials?: Dispatch<SetStateAction<Credentials>>;
+  table: Awaited<ReturnType<typeof describeTable>>["data"];
+  setTable?: Dispatch<
+    SetStateAction<Awaited<ReturnType<typeof describeTable>>["data"]>
+  >;
+  item: { [key: string]: any };
+  setItem?: Dispatch<SetStateAction<{ [key: string]: any }>>;
   notification?: PreloaderResponse<unknown>;
   setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
 };
 
-export const ElectronStore = createContext<ElectronContext>({
+export const ElectronStore = createContext<Partial<ElectronContext>>({
   aws: window.aws,
 });
 
@@ -48,6 +56,7 @@ export const blankCredentials = {
   awsAccountId: "",
   awsAccessKeyId: "",
   awsSecretAccessKey: "",
+  region: "us-east-1",
   awsRoleArn: "",
   sessionToken: "",
   mfaCode: "",
@@ -58,6 +67,10 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
   // when those values are passed in, and also, remove them from the env when those
   // values are unset
   const [credentials, setCredentials] = useState<Credentials>(blankCredentials);
+  const [table, setTable] = useState<
+    Awaited<ReturnType<typeof describeTable>>["data"]
+  >();
+  const [item, setItem] = useState<{ [key: string]: any }>();
   const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
     message: "Welcome!",
     type: "info",
@@ -73,6 +86,10 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         aws: props.aws || window.aws,
         credentials,
         setCredentials,
+        table,
+        setTable,
+        item,
+        setItem,
         notification,
         setNotification,
         clearCredentials,

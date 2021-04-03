@@ -8,32 +8,22 @@ import React, {
 import { ElectronStore } from "@src/contexts/electron-context";
 
 import {
+  Backdrop,
+  Box,
+  Button,
+  Card,
   FormControl,
   InputLabel,
-  Select,
-  MenuItem,
-  makeStyles,
-  createStyles,
-  Theme,
-  FormHelperText,
+  NativeSelect,
   TextField,
   Typography,
-  Button,
 } from "@material-ui/core";
 import { SafeProfile } from "@src/utils/aws/accounts/config";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 300,
-    },
-  })
-);
+import { useStyles } from "../../../styles";
 
 export const Profile = (): ReactElement => {
   const {
-    aws: { listTables, listAwsConfig },
+    aws: { authenticator, listAwsConfig },
     setCredentials,
     credentials,
     setNotification,
@@ -56,73 +46,73 @@ export const Profile = (): ReactElement => {
     setup();
   }, []);
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const auth = async () => {
+    if (mfaRequire && credentials.mfaCode.length === 6)
+      await authenticator({
+        profile: credentials.profile,
+        mfaCode: credentials.mfaCode,
+      });
+  };
+
+  useEffect(() => {
+    auth();
+  }, [credentials.profile, credentials.mfaCode]);
+
+  const handleProfileChange = async (
+    e: React.ChangeEvent<{
+      name?: string;
+      value: unknown;
+    }>
+  ) => {
+    const profile = String(e.target.value);
+
+    const mfaIsRequired = config.find(
+      (collection) => collection.profile === profile
+    ).mfa;
+
+    setCredentials((current) => ({
+      ...current,
+      ...{
+        profile,
+        mfaCode: "",
+      },
+    }));
+
+    setMfaRequired(mfaIsRequired);
+    setOpen(mfaIsRequired);
+
+    if (!mfaIsRequired) {
+      await authenticator({ profile, mfaCode: "" });
+    }
+  };
+
+  const [open, setOpen] = useState(mfaRequire);
+
+  const handleMfaSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const results = await listTables(credentials.profile, credentials.mfaCode);
-    setNotification(results);
+    auth();
+    setOpen(false);
   };
 
   return (
     <div>
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <FormControl className={classes.formControl}>
-          <Typography>Select an available profile</Typography>
-        </FormControl>
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel htmlFor="aws-select-profile">
-            Choose AWS Account Profile
-          </InputLabel>
-          <Select
-            value={credentials.profile}
-            onChange={async (e) => {
-              const profile = String(e.target.value);
-              setCredentials((current) => ({
-                ...current,
-                ...{
-                  profile,
-                  mfaCode: "",
-                },
-              }));
-              setMfaRequired(
-                config.find((collection) => collection.profile === profile).mfa
-              );
-            }}
-            inputProps={{
-              name: "Choose AWS Account Profile",
-              id: "aws-select-profile",
-            }}
-            autoWidth
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {config &&
-              config.map(({ profile, assumeRole, mfa }) => (
-                <MenuItem
-                  value={profile}
-                  key={[profile, assumeRole, mfa].join("-")}
-                >
-                  <b>{profile}</b>
-                </MenuItem>
-              ))}
-          </Select>
-          <FormHelperText>
-            These profiles were found on your local machine. To use another
-            profile edit the <em>`~/.aws</em> files
-          </FormHelperText>
-        </FormControl>
-        {mfaRequire && (
-          <>
-            <FormControl className={classes.formControl}>
-              <Typography>AWS Multifactor Authentication (MFA) Code</Typography>
-            </FormControl>
-            <FormControl className={classes.formControl}>
+      <Backdrop className={classes.backdrop} open={open}>
+        <Card>
+          <Box p={4} display="flex" flexDirection="column">
+            <form onSubmit={handleMfaSubmit}>
+              <Typography>
+                Multi-Factor Authentication is required for this account.
+              </Typography>
+              <br />
               <TextField
+                data-test="input-mfa"
+                margin="dense"
                 id="aws-mfa-code"
                 label="AWS MFA Code"
-                variant="filled"
+                variant="outlined"
                 required={mfaRequire}
                 value={credentials.mfaCode}
+                focused={mfaRequire && !credentials.mfaCode}
                 onChange={(e) =>
                   setCredentials((current) => ({
                     ...current,
@@ -133,17 +123,55 @@ export const Profile = (): ReactElement => {
                 }
                 type="text"
               />
-            </FormControl>
-          </>
-        )}
-        <FormControl className={classes.formControl}>
-          <div>
-            <Button type="submit" variant="contained" color="secondary">
-              Authenticate
-            </Button>
-          </div>
-        </FormControl>
-      </form>
+              <br />
+              <Box
+                display="flex"
+                flexDirection="row"
+                justifyContent="space-between"
+              >
+                <Button variant="contained" type="submit" color="primary">
+                  Authenticate
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </form>
+          </Box>
+        </Card>
+      </Backdrop>
+      <FormControl
+        data-test="select-profile"
+        variant="outlined"
+        className={classes.formControl}
+        margin="dense"
+      >
+        <InputLabel htmlFor="aws-select-profile">profile</InputLabel>
+        <NativeSelect
+          value={credentials.profile}
+          onChange={(e) => handleProfileChange(e)}
+          inputProps={{
+            name: "Choose AWS Account Profile",
+            id: "aws-select-profile",
+          }}
+          margin="dense"
+          variant="outlined"
+        >
+          {config &&
+            config.map(({ profile, assumeRole, mfa }) => (
+              <option
+                value={profile}
+                key={[profile, assumeRole, mfa].join("-")}
+              >
+                {profile}
+              </option>
+            ))}
+        </NativeSelect>
+      </FormControl>
     </div>
   );
 };
