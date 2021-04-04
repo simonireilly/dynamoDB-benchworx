@@ -1,7 +1,7 @@
 {
   "name": "BenchWorx",
   "productName": "BenchWorx",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "jest",
     "test-e2e": "cypress run",
     "test-e2e-u": "cypress run --env updateSnapshots=true",
-    "publish": "electron-forge publish",
+    "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
     "prepare": "husky install"
   },
@@ -26,6 +26,17 @@
   "license": "MIT",
   "config": {
     "forge": {
+      "publishers": {
+        "name": "@electron-forge/publisher-github",
+        "config": {
+          "repository": {
+            "owner": "simonireilly",
+            "name": "dynamoDB-benchworx"
+          },
+          "draft": true,
+          "prerelease": true
+        }
+      },
       "packagerConfig": {},
       "makers": [
         {
@@ -82,6 +93,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/plugin-webpack": "6.0.0-beta.54",
+    "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/cypress-image-snapshot": "^3.1.5",
     "@types/jest": "^26.0.22",
@@ -109,7 +121,6 @@
     "nock": "^13.0.11",
     "node-loader": "^1.0.1",
     "prettier": "^2.2.1",
-    "react-scripts": "^4.0.3",
     "style-loader": "^1.2.1",
     "ts-jest": "^26.5.4",
     "ts-loader": "^8.0.2",
