@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Install packages
-        run: yarn install --ignore-optional
+        run: yarn install --ignore-optional --ignore-scripts
 
       - name: publish
         env:
