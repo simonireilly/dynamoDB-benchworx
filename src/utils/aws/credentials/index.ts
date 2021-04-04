@@ -16,7 +16,9 @@ const inMemoryCache: {
 export const authenticator = async ({
   profile,
   mfaCode,
-}: Props): Promise<PreloaderResponse<void>> => {
+}: Props): Promise<PreloaderResponse<{ expiration?: Date }>> => {
+  let result;
+
   const credentials = fromIni({
     profile,
     roleAssumer,
@@ -26,13 +28,18 @@ export const authenticator = async ({
   });
 
   try {
-    inMemoryCache[profile] = await credentials();
+    result = await credentials();
+    inMemoryCache[profile] = result;
+
+    console.info({ result });
 
     return {
       type: "success",
       message: `Authenticated for ${profile}`,
       details: null,
-      data: null,
+      data: {
+        expiration: result.Expiration,
+      },
     };
   } catch (e) {
     return {

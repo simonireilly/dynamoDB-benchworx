@@ -25,6 +25,7 @@ export type Credentials = {
   awsAccountId: string;
   awsAccessKeyId: string;
   awsSecretAccessKey: string;
+  expiration: null | Date;
   region: string;
   awsRoleArn?: string;
   sessionToken?: string;
@@ -50,12 +51,13 @@ export const ElectronStore = createContext<Partial<ElectronContext>>({
   aws: window.aws,
 });
 
-export const blankCredentials = {
+export const blankCredentials: Credentials = {
   profile: "",
   userId: "",
   awsAccountId: "",
   awsAccessKeyId: "",
   awsSecretAccessKey: "",
+  expiration: null,
   region: "us-east-1",
   awsRoleArn: "",
   sessionToken: "",

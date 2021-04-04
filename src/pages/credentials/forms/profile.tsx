@@ -47,11 +47,21 @@ export const Profile = (): ReactElement => {
   }, []);
 
   const auth = async () => {
-    if (mfaRequire && credentials.mfaCode.length === 6)
-      await authenticator({
+    if (mfaRequire && credentials.mfaCode.length === 6) {
+      const response = await authenticator({
         profile: credentials.profile,
         mfaCode: credentials.mfaCode,
       });
+
+      console.info({ response });
+
+      if (response.data.expiration) {
+        setCredentials((current) => ({
+          ...current,
+          expiration: response.data.expiration,
+        }));
+      }
+    }
   };
 
   useEffect(() => {

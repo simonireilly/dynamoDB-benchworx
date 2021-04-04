@@ -6,8 +6,10 @@ import { mockAws } from "@cy/support/mocks";
 
 describe("End to End tests", () => {
   beforeEach(() => {
-    cy.fixture("describe-table").then((table) =>
-      mount(
+    cy.clock(new Date(2020, 6, 24, 22, 19, 0).getTime());
+
+    cy.fixture("describe-table").then((table) => {
+      return mount(
         <ElectronStore.Provider
           value={{
             table,
@@ -15,6 +17,7 @@ describe("End to End tests", () => {
             credentials: {
               profile: "default",
               region: "eu-west-1",
+              expiration: new Date(2020, 6, 24, 22, 19, 30),
             },
             setNotification: () => ({}),
             item: {
@@ -25,8 +28,8 @@ describe("End to End tests", () => {
         >
           <UI />
         </ElectronStore.Provider>
-      )
-    );
+      );
+    });
   });
   it("renders the application in full", () => {
     cy.wait(1000);
