@@ -9,6 +9,7 @@ export const ItemViewer = (): ReactElement => {
 
   return (
     <Editor
+      theme="vs-dark"
       defaultLanguage="json"
       value={JSON.stringify(item, null, 2)}
       defaultValue="// None selected"

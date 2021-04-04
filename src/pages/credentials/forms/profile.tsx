@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { SafeProfile } from "@src/utils/aws/accounts/config";
-import { useStyles } from "../../../styles";
+import { useStyles } from "@src/styles";
 
 export const Profile = (): ReactElement => {
   const {
@@ -28,6 +28,7 @@ export const Profile = (): ReactElement => {
     credentials,
     setNotification,
   } = useContext(ElectronStore);
+
   const classes = useStyles();
   const [config, setConfig] = useState<SafeProfile[]>([]);
   const [mfaRequire, setMfaRequired] = useState<boolean>(false);

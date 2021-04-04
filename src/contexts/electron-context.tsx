@@ -41,6 +41,8 @@ export type ElectronContext = {
   >;
   item: { [key: string]: any };
   setItem?: Dispatch<SetStateAction<{ [key: string]: any }>>;
+  items: { [key: string]: any }[];
+  setItems?: Dispatch<SetStateAction<{ [key: string]: any }[]>>;
   notification?: PreloaderResponse<unknown>;
   setNotification?: Dispatch<SetStateAction<PreloaderResponse<unknown>>>;
   clearCredentials?: () => void;
@@ -71,6 +73,7 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
     Awaited<ReturnType<typeof describeTable>>["data"]
   >();
   const [item, setItem] = useState<{ [key: string]: any }>();
+  const [items, setItems] = useState<{ [key: string]: any }[]>();
   const [notification, setNotification] = useState<PreloaderResponse<unknown>>({
     message: "Welcome!",
     type: "info",
@@ -90,6 +93,8 @@ export const ElectronContextProvider = (props: Props): ReactElement => {
         setTable,
         item,
         setItem,
+        items,
+        setItems,
         notification,
         setNotification,
         clearCredentials,
