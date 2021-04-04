@@ -1,7 +1,7 @@
 import React from "react";
 import { mount } from "@cypress/react";
 import { ElectronStore } from "@src/contexts/electron-context";
-import { UI } from "@src/pages/layout/ui";
+import { UI } from "@src/layout/ui";
 import { mockAws } from "@cy/support/mocks";
 
 describe("End to End tests", () => {

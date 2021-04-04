@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import { Box, Grid } from "@material-ui/core";
-import { Header } from "@src/pages/layout/header";
-import { Sidebar } from "@src/pages/layout/sidebar";
-import { Main } from "@src/pages/layout/main";
+import { Header } from "@src/layout/header";
+import { Sidebar } from "@src/layout/sidebar";
+import { Main } from "@src/layout/main";
 import { Notification } from "@src/components/notification";
 
 export const UI = (): ReactElement => {

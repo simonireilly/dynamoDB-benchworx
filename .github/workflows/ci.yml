@@ -46,7 +46,7 @@ jobs:
             ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ steps.extract_branch.outputs.branch }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
 
       - name: Cypress
-        run: yarn cypress run
+        run: yarn cy
 
       - uses: actions/upload-artifact@v1
         if: always()

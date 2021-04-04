@@ -87,17 +87,17 @@ export const DataTable = (): ReactElement => {
     setItem(data);
   };
 
-  return (
-    <Paper className={classes.workbench}>
-      {rows && rows.Items.length > 0 && (
-        <DataGrid
-          rows={rowData}
-          onRowSelected={handleRowSelection}
-          columns={columns}
-          pageSize={25}
-          density="compact"
-        />
-      )}
-    </Paper>
+  return rows ? (
+    rows.Items.length > 0 && (
+      <DataGrid
+        rows={rowData}
+        onRowSelected={handleRowSelection}
+        columns={columns}
+        pageSize={25}
+        density="compact"
+      />
+    )
+  ) : (
+    <></>
   );
 };

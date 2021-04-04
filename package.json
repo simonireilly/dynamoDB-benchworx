@@ -9,8 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "test": "jest",
-    "test-e2e": "cypress run",
-    "test-e2e-u": "cypress run --env updateSnapshots=true",
+    "cy": "cypress run",
+    "cy:u": "cypress run --env updateSnapshots=true",
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
     "prepare": "husky install"
