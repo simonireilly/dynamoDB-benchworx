@@ -21,6 +21,12 @@ describe("End to End tests", () => {
               pk: "test",
               sk: "example",
             },
+            items: [
+              {
+                pk: "test",
+                sk: "example",
+              },
+            ],
           }}
         >
           <UI />

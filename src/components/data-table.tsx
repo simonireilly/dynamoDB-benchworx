@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState } from "react";
+import React, { ReactElement, useContext } from "react";
 import {
   DataGrid,
   GridColDef,
@@ -8,32 +8,17 @@ import {
 } from "@material-ui/data-grid";
 import { ElectronStore } from "@src/contexts/electron-context";
 
-export const DataTable = (): ReactElement => {
-  const {
-    aws: { scan },
-    table,
-    items,
-    setItem,
-  } = useContext(ElectronStore);
-  const [hashKey, setHashKey] = useState<string>("");
-  const [sortKey, setSortKey] = useState<string>("");
+type Props = {
+  items: { [key: string]: any }[];
+  hashKey: string;
+  sortKey: string;
+};
 
-  useEffect(() => {
-    const init = async () => {
-      setHashKey(
-        table.Table.KeySchema.find((el) => el.KeyType === "HASH")?.AttributeName
-      );
-      setSortKey(
-        table.Table.KeySchema.find((el) => el.KeyType === "RANGE")
-          ?.AttributeName
-      );
-    };
-
-    init();
-  }, [table?.Table?.TableName]);
+export const DataTable = ({ items, hashKey, sortKey }: Props): ReactElement => {
+  const { setItem } = useContext(ElectronStore);
 
   const everyKey: string[] =
-    items &&
+    items.length &&
     items.reduce<string[]>((acc, item) => {
       Object.keys(item).forEach((key) => {
         if (acc.indexOf(key) < 0) acc.push(key);
@@ -54,7 +39,7 @@ export const DataTable = (): ReactElement => {
     [row[hashKey], row[sortKey]].filter(Boolean).join("-");
 
   const rowData =
-    items &&
+    items.length &&
     items.map<GridRowData>((row) => ({
       // Assign ID to the pk attribute
       id: constructCompositeKey(row),
@@ -66,16 +51,14 @@ export const DataTable = (): ReactElement => {
     setItem(data);
   };
 
-  return items ? (
-    items.length > 0 && (
-      <DataGrid
-        rows={rowData}
-        onRowSelected={handleRowSelection}
-        columns={columns}
-        pageSize={25}
-        density="compact"
-      />
-    )
+  return items.length > 0 ? (
+    <DataGrid
+      rows={rowData}
+      onRowSelected={handleRowSelection}
+      columns={columns}
+      pageSize={25}
+      density="compact"
+    />
   ) : (
     <></>
   );

@@ -17,7 +17,7 @@ export const Main = (): ReactElement => {
         width="100%"
         height="88vh"
       >
-        <Box flexGrow={1}>
+        <Box flexGrow={1} minWidth="400px">
           <QueryPlanner />
         </Box>
         <Box flexGrow={2} display="flex" flexDirection="column" p={2}>

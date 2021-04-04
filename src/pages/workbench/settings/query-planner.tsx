@@ -1,6 +1,5 @@
 import React, { ReactElement, useContext, useState } from "react";
 import {
-  ButtonGroup,
   Button,
   InputLabel,
   NativeSelect,
@@ -10,16 +9,28 @@ import {
 } from "@material-ui/core";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
+import type { ScanCommandInput } from "@aws-sdk/lib-dynamodb";
+import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 
 export const QueryPlanner = (): ReactElement => {
   const {
     table,
     credentials,
     setNotification,
+    setItems,
     aws: { scan },
   } = useContext(ElectronStore);
   const classes = useStyles();
+  const [operation, setOperation] = React.useState<string | null>("scan");
+
+  const handleOperation = (
+    event: React.MouseEvent<HTMLElement>,
+    newOperation: string | null
+  ) => {
+    setOperation(newOperation);
+  };
   const [indexName, setIndexName] = useState<string>();
+  const [limit, setLimit] = useState<number>(100);
 
   const handleTableSelection = (
     e: React.ChangeEvent<{
@@ -27,40 +38,58 @@ export const QueryPlanner = (): ReactElement => {
       value: unknown;
     }>
   ) => {
-    console.info({ target: e.currentTarget.value });
     setIndexName(String(e.target.value));
   };
 
-  // TODO: Figure out, how to set the rows in the table, based on these scans
-  // 1. Set an items collection on the context
-  //   - We also need the key schema, the PK, SK and may need other data
-  // 2. Prop drill
-  //   - Pass everything into the table from the query planner
   const getResults = async () => {
-    const results = await scan(credentials.profile, credentials.region, {
+    const options: ScanCommandInput = {
       TableName: table?.Table?.TableName,
-      IndexName: indexName,
-    });
+    };
+
+    if (indexName) options.IndexName = indexName;
+    if (limit) options.Limit = limit;
+
+    const results = await scan(
+      credentials.profile,
+      credentials.region,
+      options
+    );
     setNotification(results);
+    if (results.type === "success") setItems(results.data.Items);
   };
 
   return (
     <Box display="flex" alignItems="flex-start" flexDirection="column" p={1}>
-      <ButtonGroup
-        variant="text"
-        color="primary"
-        aria-label="text primary button group"
+      <FormControl
+        data-test="toggle-operation"
+        variant="outlined"
+        className={classes.formControl}
+        margin="dense"
       >
-        <Button>Query</Button>
-        <Button>Scan</Button>
-      </ButtonGroup>
+        <ToggleButtonGroup
+          size="small"
+          value={operation}
+          exclusive
+          onChange={handleOperation}
+          aria-label="dynamodb operation"
+        >
+          <ToggleButton value="scan" aria-label="scan dynamodb">
+            Scan
+          </ToggleButton>
+          <ToggleButton value="query" aria-label="query dynamodb">
+            Query
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </FormControl>
       <FormControl
         data-test="select-profile"
         variant="outlined"
         className={classes.formControl}
         margin="dense"
       >
-        <InputLabel htmlFor="select">Table or Index</InputLabel>
+        <InputLabel htmlFor="select" shrink>
+          Table or Index
+        </InputLabel>
         <NativeSelect
           id="select"
           margin="dense"
@@ -68,11 +97,7 @@ export const QueryPlanner = (): ReactElement => {
           value={indexName}
           onChange={handleTableSelection}
         >
-          {table && (
-            <option value={table.Table.TableName}>
-              {table.Table.TableName}
-            </option>
-          )}
+          {table && <option value={null}>{table.Table.TableName}</option>}
           {table && table.Table.LocalSecondaryIndexes && (
             <optgroup label="Local Secondary Indexes">
               {table.Table.LocalSecondaryIndexes.map((lsi) => (
@@ -119,9 +144,39 @@ export const QueryPlanner = (): ReactElement => {
           margin="dense"
         />
       </FormControl>
-      <Button variant="contained" color="primary" onClick={() => getResults()}>
-        Execute
-      </Button>
+      <FormControl
+        data-test="number-limit"
+        variant="outlined"
+        className={classes.formControl}
+        margin="dense"
+      >
+        <TextField
+          id="number-limit"
+          value={limit}
+          onChange={(e) => setLimit(parseInt(e.target.value))}
+          InputLabelProps={{ shrink: true }}
+          InputProps={{ inputProps: { min: 0, max: 100 } }}
+          inputMode="numeric"
+          type="number"
+          label="Item Limit"
+          variant="outlined"
+          margin="dense"
+        />
+      </FormControl>
+      <FormControl
+        data-test="button-execute"
+        variant="outlined"
+        className={classes.formControl}
+        margin="dense"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => getResults()}
+        >
+          Execute
+        </Button>
+      </FormControl>
     </Box>
   );
 };
