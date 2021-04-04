@@ -26,17 +26,19 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "publishers": {
-        "name": "@electron-forge/publisher-github",
-        "config": {
-          "repository": {
-            "owner": "simonireilly",
-            "name": "dynamoDB-benchworx"
-          },
-          "draft": true,
-          "prerelease": true
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "repository": {
+              "owner": "simonireilly",
+              "name": "dynamoDB-benchworx"
+            },
+            "draft": true,
+            "prerelease": true
+          }
         }
-      },
+      ],
       "packagerConfig": {},
       "makers": [
         {
