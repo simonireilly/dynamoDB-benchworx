@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  SyntheticEvent,
-  useContext,
-  useState,
-} from "react";
+import React, { ReactElement, useContext, useState } from "react";
 import {
   ButtonGroup,
   Button,
@@ -13,19 +8,40 @@ import {
   FormControl,
   Box,
 } from "@material-ui/core";
-import { DescribeTableCommandOutput } from "@aws-sdk/client-dynamodb";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
 
 export const QueryPlanner = (): ReactElement => {
-  const { table } = useContext(ElectronStore);
+  const {
+    table,
+    credentials,
+    setNotification,
+    aws: { scan },
+  } = useContext(ElectronStore);
   const classes = useStyles();
-  const [selected, setSelected] = useState<
-    Partial<DescribeTableCommandOutput["Table"]>
-  >();
+  const [indexName, setIndexName] = useState<string>();
 
-  const handleTableSelection = (e: SyntheticEvent) => {
-    console.info({ target: e.currentTarget.nodeValue });
+  const handleTableSelection = (
+    e: React.ChangeEvent<{
+      name?: string;
+      value: unknown;
+    }>
+  ) => {
+    console.info({ target: e.currentTarget.value });
+    setIndexName(String(e.target.value));
+  };
+
+  // TODO: Figure out, how to set the rows in the table, based on these scans
+  // 1. Set an items collection on the context
+  //   - We also need the key schema, the PK, SK and may need other data
+  // 2. Prop drill
+  //   - Pass everything into the table from the query planner
+  const getResults = async () => {
+    const results = await scan(credentials.profile, credentials.region, {
+      TableName: table?.Table?.TableName,
+      IndexName: indexName,
+    });
+    setNotification(results);
   };
 
   return (
@@ -49,7 +65,7 @@ export const QueryPlanner = (): ReactElement => {
           id="select"
           margin="dense"
           variant="outlined"
-          value={selected}
+          value={indexName}
           onChange={handleTableSelection}
         >
           {table && (
@@ -103,6 +119,9 @@ export const QueryPlanner = (): ReactElement => {
           margin="dense"
         />
       </FormControl>
+      <Button variant="contained" color="primary" onClick={() => getResults()}>
+        Execute
+      </Button>
     </Box>
   );
 };

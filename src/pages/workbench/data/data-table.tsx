@@ -7,11 +7,7 @@ import {
   GridValueFormatterParams,
 } from "@material-ui/data-grid";
 import { ElectronStore } from "@src/contexts/electron-context";
-import { Paper } from "@material-ui/core";
-import { useStyles } from "@src/styles";
 
-// TODO: Rep[lace with react table as we will not use the complex functions
-// we currently only need an onclick to set the current item
 export const DataTable = (): ReactElement => {
   const {
     aws: { scan },
@@ -19,7 +15,6 @@ export const DataTable = (): ReactElement => {
     table,
     setItem,
   } = useContext(ElectronStore);
-  const classes = useStyles();
   const [rows, setRows] = useState<Awaited<ReturnType<typeof scan>>["data"]>();
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
@@ -32,11 +27,10 @@ export const DataTable = (): ReactElement => {
           $metadata: {},
         });
 
-      const results = await scan(
-        credentials.profile,
-        credentials.region,
-        table?.Table?.TableName
-      );
+      const results = await scan(credentials.profile, credentials.region, {
+        TableName: table?.Table?.TableName,
+        Limit: 50,
+      });
 
       setHashKey(
         table.Table.KeySchema.find((el) => el.KeyType === "HASH")?.AttributeName
