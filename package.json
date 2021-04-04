@@ -131,7 +131,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.9.0",
-    "@aws-sdk/client-sts": "^3.9.0",
+    "@aws-sdk/client-sts": "^3.11.0",
     "@aws-sdk/credential-provider-node": "^3.9.0",
     "@aws-sdk/lib-dynamodb": "^3.9.0",
     "@material-ui/core": "^4.11.3",
