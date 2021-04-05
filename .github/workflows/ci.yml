@@ -2,8 +2,6 @@ name: Lint/Test/Build
 
 on:
   push:
-    tags-ignore:
-      - v*
 
 jobs:
   test:
