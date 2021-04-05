@@ -1,5 +1,4 @@
 import { fromIni } from "@aws-sdk/credential-provider-ini";
-
 import { roleAssumer } from "@src/utils/aws/credentials/role-assumer";
 import { Credentials } from "@aws-sdk/types";
 import { PreloaderResponse } from "@src/preload";

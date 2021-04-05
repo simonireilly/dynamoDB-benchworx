@@ -26,5 +26,12 @@ Array [
     "profile": "mfaRoleAssume",
     "region": "eu-west-1",
   },
+  Object {
+    "assumeRole": false,
+    "endpoint": "http://localhost:1234",
+    "mfa": false,
+    "profile": "local",
+    "region": "local",
+  },
 ]
 `;

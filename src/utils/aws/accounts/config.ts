@@ -13,21 +13,25 @@ export type SafeProfile = {
   mfa: boolean;
   assumeRole: boolean;
   region: string;
+  endpoint?: string;
 };
 
 export const listAwsConfig = async (): Promise<
   PreloaderResponse<SafeProfile[]>
 > => {
   const config = await loadSharedConfigFiles();
+
   if (config) {
     const data = Object.entries(mergeCredentialsAndConfig(config)).map(
       safeConfigConstructor
     );
 
+    console.info(data);
+
     return {
       type: "success",
       data,
-      message: "Fetched local roles from INI files in ~/.aws/",
+      message: "Fetched local roles from INI files in ~/.aws",
       details: `Configurations found: ${data.length}`,
     };
   } else {
@@ -73,10 +77,15 @@ const mergeCredentialsAndConfig = (config: SharedConfigFiles) => {
 const safeConfigConstructor = (entry: [string, Profile]): SafeProfile => {
   const [profile, data = {}] = entry;
   const { aws_access_key_id, aws_secret_access_key, ...safeData } = data;
-  return {
+
+  const currentProfile: SafeProfile = {
     profile,
     mfa: Boolean(safeData.mfa_serial),
     assumeRole: Boolean(safeData.role_arn),
     region: safeData.region,
   };
+
+  if (safeData.endpoint) currentProfile.endpoint = safeData.endpoint;
+
+  return currentProfile;
 };

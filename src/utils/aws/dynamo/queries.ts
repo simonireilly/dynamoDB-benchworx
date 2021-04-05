@@ -4,6 +4,7 @@ import {
   DescribeTableCommand,
   DescribeTableCommandOutput,
   DynamoDBClient,
+  DynamoDBClientConfig,
   ListTablesCommand,
   ListTablesCommandInput,
   ListTablesCommandOutput,
@@ -15,15 +16,27 @@ import {
   ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
+import { listAwsConfig } from "../accounts/config";
 
 const clientConstructor = async (profile: string, region: string) => {
-  const credentials = await fetchCredentials(profile);
+  if (!profile) throw Error("no profile provided to client");
 
-  const client = new DynamoDBClient({
+  const credentials = await fetchCredentials(profile);
+  const configurations = await listAwsConfig();
+
+  const params: DynamoDBClientConfig = {
     region,
     credentials,
     logger: console,
-  });
+  };
+
+  const endpoint = configurations.data.find(
+    (config) => config.profile === profile
+  ).endpoint;
+
+  if (endpoint) params.endpoint = endpoint;
+
+  const client = new DynamoDBClient(params);
 
   return client;
 };
@@ -71,7 +84,7 @@ export const listTables = async (
     return {
       type: "success",
       data: result,
-      message: `Fetched list of tables from dynamo with ${profile}`,
+      message: `Fetched list of tables from dynamo: ${region}`,
       details: `Table count: ${result.TableNames.length}`,
     };
   } catch (e) {
