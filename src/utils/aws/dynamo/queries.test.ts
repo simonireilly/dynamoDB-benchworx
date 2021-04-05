@@ -1,5 +1,5 @@
 import { mocked } from "ts-jest/utils";
-import { describeTable, listTables, scan } from "./queries";
+import { describeTable, listTables, scan, query } from "./queries";
 import nock from "nock";
 import {
   ListTablesCommandInput,

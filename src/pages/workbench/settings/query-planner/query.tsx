@@ -1,11 +1,9 @@
 import {
-  ComparisonOperator,
-  DescribeTableCommandOutput,
   GlobalSecondaryIndexDescription,
   KeySchemaElement,
   LocalSecondaryIndexDescription,
-  QueryCommandInput,
 } from "@aws-sdk/client-dynamodb";
+import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 import {
   Box,
   FormControl,
@@ -29,7 +27,19 @@ type MergedIndexes = (
   | GlobalSecondaryIndexDescription
 )[];
 
-type ops = ComparisonOperator;
+const sortKeyConditions = {
+  equal: (val: string): string => `= ${val}`,
+  lessThan: (val: string): string => `< ${val}`,
+  lessThanOrEqualTo: (val: string): string => `<= ${val}`,
+  greaterThan: (val: string): string => `> ${val}`,
+  greaterThanOrEqualTo: (val: string): string => `>= ${val}`,
+  between: (
+    val: string,
+    { lower, upper }: { lower: string; upper: string }
+  ): string => `BETWEEN ${lower} AND ${upper}`,
+  begins_with: (sortKeyName: string, val: string): string =>
+    `begins_with(${sortKeyName}, ${val})`,
+};
 
 export const Query = (): ReactElement => {
   const {
@@ -43,6 +53,8 @@ export const Query = (): ReactElement => {
   const [indexName, setIndexName] = useState<string>("primary");
   const [allIndexes, setAllIndexes] = useState<MergedIndexes>([]);
   const [limit, setLimit] = useState<number>(100);
+  const [pk, setPk] = useState<string>("");
+  const [sk, setSk] = useState<string>("");
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
 
@@ -91,6 +103,18 @@ export const Query = (): ReactElement => {
     e.preventDefault();
     const options: QueryCommandInput = {
       TableName: table?.Table?.TableName,
+      KeyConditionExpression: `#pk = :pk and ${sortKeyConditions.begins_with(
+        "#sk",
+        ":sk"
+      )}`,
+      ExpressionAttributeNames: {
+        "#pk": hashKey,
+        "#sk": sortKey,
+      },
+      ExpressionAttributeValues: {
+        ":pk": pk,
+        ":sk": sk,
+      },
     };
 
     if (indexName !== "primary") options.IndexName = indexName;
@@ -157,6 +181,8 @@ export const Query = (): ReactElement => {
             disabled={!hashKey}
             variant="outlined"
             margin="dense"
+            value={pk}
+            onChange={(e) => setPk(e.target.value)}
           />
         </FormControl>
         <FormControl
@@ -171,6 +197,8 @@ export const Query = (): ReactElement => {
             disabled={!sortKey}
             variant="outlined"
             margin="dense"
+            value={sk}
+            onChange={(e) => setSk(e.target.value)}
           />
         </FormControl>
         <FormControl
