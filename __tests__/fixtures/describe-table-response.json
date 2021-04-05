@@ -1,0 +1,61 @@
+{
+  "Table": {
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "Id",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "PostedBy",
+        "AttributeType": "S"
+      },
+      {
+        "AttributeName": "ReplyDateTime",
+        "AttributeType": "S"
+      }
+    ],
+    "CreationDateTime": "2019-11-14T11:26:36.646Z",
+    "ItemCount": 4,
+    "KeySchema": [
+      {
+        "AttributeName": "Id",
+        "KeyType": "HASH"
+      },
+      {
+        "AttributeName": "ReplyDateTime",
+        "KeyType": "RANGE"
+      }
+    ],
+    "LocalSecondaryIndexes": [
+      {
+        "IndexArn": "arn:aws:dynamodb:us-east-1:322567890963:table/Reply/index/PostedBy-index",
+        "IndexName": "PostedBy-index",
+        "IndexSizeBytes": 324,
+        "ItemCount": 4,
+        "KeySchema": [
+          {
+            "AttributeName": "Id",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "PostedBy",
+            "KeyType": "RANGE"
+          }
+        ],
+        "Projection": {
+          "ProjectionType": "KEYS_ONLY"
+        }
+      }
+    ],
+    "ProvisionedThroughput": {
+      "NumberOfDecreasesToday": 0,
+      "ReadCapacityUnits": 6,
+      "WriteCapacityUnits": 5
+    },
+    "TableArn": "arn:aws:dynamodb:us-east-1:322567890963:table/Reply",
+    "TableId": "bd8de77e-1cfc-4c24-9c35-fd1c1eb178f5",
+    "TableName": "Reply",
+    "TableSizeBytes": 472,
+    "TableStatus": "ACTIVE"
+  }
+}
