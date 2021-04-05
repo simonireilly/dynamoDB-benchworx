@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
-import { ElectronContextProvider } from "../contexts/electron-context";
+import { ElectronContextProvider } from "@src/contexts/electron-context";
 
-import { UI } from "./layout/ui";
+import { UI } from "../layout/ui";
 
 export const App = (): ReactElement => {
   return (

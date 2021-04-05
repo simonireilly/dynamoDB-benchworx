@@ -31,31 +31,36 @@ jobs:
         run: yarn lint
 
       - name: Testing
-        run: yarn test
+        run: yarn test --coverage
 
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+      - uses: codecov/codecov-action@v1
+        with:
+          verbose: true
 
       - name: Append current screenshot
         uses: peter-evans/commit-comment@v1
+        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
         with:
           body: |
-            # Current UI
-            ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ steps.extract_branch.outputs.branch }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
+            ### 📷 Snapshot Tests
+
+            | Previous UI | Current UI |
+            | ----------- | ---------- |
+            | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/main/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ github.sha }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) |
+
+            Changes to the UI that are applicable after this merge request.
 
       - name: Cypress
-        run: yarn cypress run
+        run: yarn cy
 
       - uses: actions/upload-artifact@v1
-        if: always()
+        if: always() && (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-screenshots
           path: cypress/screenshots
 
       - uses: actions/upload-artifact@v1
-        if: always()
+        if: always() && (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-videos
           path: cypress/videos

@@ -9,7 +9,11 @@ import {
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 
-import { DynamoDBDocument, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import {
+  DynamoDBDocument,
+  ScanCommandInput,
+  ScanCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
 
 const clientConstructor = async (profile: string, region: string) => {
@@ -113,7 +117,7 @@ export const describeTable = async (
 export const scan = async (
   profile: string,
   region: string,
-  tableName: string
+  options: ScanCommandInput
 ): Promise<PreloaderResponse<ScanCommandOutput>> => {
   let result;
 
@@ -122,19 +126,19 @@ export const scan = async (
 
     const documentClient = DynamoDBDocument.from(client);
 
-    result = await documentClient.scan({ TableName: tableName, Limit: 50 });
+    result = await documentClient.scan(options);
 
     return {
       type: "success",
       data: result,
-      message: `Fetched list of tables from dynamo with ${profile}`,
+      message: `Scanned table: ${options.TableName}`,
       details: `Scan count: ${result.Count}`,
     };
   } catch (e) {
     return {
       type: "error",
       data: null,
-      message: `Unable to list tables for profile: ${profile}`,
+      message: `Scan operation failed: ${options.TableName}`,
       details: e.message,
     };
   }

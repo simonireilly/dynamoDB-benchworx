@@ -9,8 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "test": "jest",
-    "test-e2e": "cypress run",
-    "test-e2e-u": "cypress run --env updateSnapshots=true",
+    "cy": "cypress run",
+    "cy:u": "cypress run --env updateSnapshots=true",
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
     "prepare": "husky install"
@@ -129,7 +129,7 @@
     "prettier": "^2.2.1",
     "ts-jest": "^26.5.4",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
-    "@typescript-eslint/parser": "^4.18.0"
+    "@typescript-eslint/parser": "^4.20.0"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.9.0",
