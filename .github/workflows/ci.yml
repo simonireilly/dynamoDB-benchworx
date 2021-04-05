@@ -35,7 +35,7 @@ jobs:
 
       - name: Append current screenshot
         uses: peter-evans/commit-comment@v1
-        if: github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]'
+        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
         with:
           body: |
             ### 📷 Snapshot Tests
@@ -50,13 +50,13 @@ jobs:
         run: yarn cy
 
       - uses: actions/upload-artifact@v1
-        if: always() && (github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]')
+        if: always() && (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-screenshots
           path: cypress/screenshots
 
       - uses: actions/upload-artifact@v1
-        if: always() && (github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]')
+        if: always() && (github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-videos
           path: cypress/videos
