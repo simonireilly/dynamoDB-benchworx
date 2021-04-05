@@ -6,12 +6,17 @@ import {
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
+import { listAwsConfig } from "@src/utils/aws/accounts/config";
 import { describeTableResponse } from "@fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
 jest.spyOn(global.console, "info");
+
 jest.mock("@src/utils/aws/credentials");
 const mockedFetchCredentials = mocked(fetchCredentials);
+
+jest.mock("@src/utils/aws/accounts/config");
+const mockedListAwsConfig = mocked(listAwsConfig);
 
 describe("Queries", () => {
   beforeEach(() => {
@@ -21,6 +26,15 @@ describe("Queries", () => {
     mockedFetchCredentials.mockResolvedValueOnce({
       accessKeyId: "test",
       secretAccessKey: "secret",
+    });
+
+    mockedListAwsConfig.mockResolvedValueOnce({
+      type: "success",
+      data: [
+        { profile: "cgu", mfa: false, assumeRole: false, region: "eu-west-1" },
+      ],
+      message: null,
+      details: null,
     });
   });
 
