@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queries describeTable returns the information for the table 1`] = `
+Object {
+  "$metadata": Object {
+    "attempts": 1,
+    "cfId": undefined,
+    "extendedRequestId": undefined,
+    "httpStatusCode": 200,
+    "requestId": undefined,
+    "totalRetryDelay": 0,
+  },
+  "Table": Object {
+    "ArchivalSummary": undefined,
+    "AttributeDefinitions": Array [
+      Object {
+        "AttributeName": "Id",
+        "AttributeType": "S",
+      },
+      Object {
+        "AttributeName": "PostedBy",
+        "AttributeType": "S",
+      },
+      Object {
+        "AttributeName": "ReplyDateTime",
+        "AttributeType": "S",
+      },
+    ],
+    "BillingModeSummary": undefined,
+    "CreationDateTime": Date { NaN },
+    "GlobalSecondaryIndexes": undefined,
+    "GlobalTableVersion": undefined,
+    "ItemCount": 4,
+    "KeySchema": Array [
+      Object {
+        "AttributeName": "Id",
+        "KeyType": "HASH",
+      },
+      Object {
+        "AttributeName": "ReplyDateTime",
+        "KeyType": "RANGE",
+      },
+    ],
+    "LatestStreamArn": undefined,
+    "LatestStreamLabel": undefined,
+    "LocalSecondaryIndexes": Array [
+      Object {
+        "IndexArn": "arn:aws:dynamodb:us-east-1:322567890963:table/Reply/index/PostedBy-index",
+        "IndexName": "PostedBy-index",
+        "IndexSizeBytes": 324,
+        "ItemCount": 4,
+        "KeySchema": Array [
+          Object {
+            "AttributeName": "Id",
+            "KeyType": "HASH",
+          },
+          Object {
+            "AttributeName": "PostedBy",
+            "KeyType": "RANGE",
+          },
+        ],
+        "Projection": Object {
+          "NonKeyAttributes": undefined,
+          "ProjectionType": "KEYS_ONLY",
+        },
+      },
+    ],
+    "ProvisionedThroughput": Object {
+      "LastDecreaseDateTime": undefined,
+      "LastIncreaseDateTime": undefined,
+      "NumberOfDecreasesToday": 0,
+      "ReadCapacityUnits": 6,
+      "WriteCapacityUnits": 5,
+    },
+    "Replicas": undefined,
+    "RestoreSummary": undefined,
+    "SSEDescription": undefined,
+    "StreamSpecification": undefined,
+    "TableArn": "arn:aws:dynamodb:us-east-1:322567890963:table/Reply",
+    "TableId": "bd8de77e-1cfc-4c24-9c35-fd1c1eb178f5",
+    "TableName": "Reply",
+    "TableSizeBytes": 472,
+    "TableStatus": "ACTIVE",
+  },
+}
+`;

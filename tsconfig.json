@@ -21,6 +21,9 @@
       "@src/*": [
         "./src/*"
       ],
+      "@fixtures/*": [
+        "./__tests__/fixtures/*"
+      ],
       "@cy/*": [
         "./cypress/*"
       ],
@@ -31,10 +34,10 @@
   },
   "include": [
     "src/**/*",
+    "__tests__/fixtures/**/*",
     "cypress/**/*"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
   ]
 }
