@@ -50,13 +50,13 @@ jobs:
         run: yarn cy
 
       - uses: actions/upload-artifact@v1
-        if: always()
+        if: always() && (github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-screenshots
           path: cypress/screenshots
 
       - uses: actions/upload-artifact@v1
-        if: always()
+        if: always() && (github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]')
         with:
           name: cypress-videos
           path: cypress/videos
