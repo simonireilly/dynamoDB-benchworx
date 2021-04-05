@@ -7,5 +7,6 @@ module.exports = {
   testPathIgnorePatterns: ["<rootDir>/cypress/", "<rootDir>/node_modules/"],
   moduleNameMapper: {
     "^@src/(.*)": resolve(__dirname, "./src/$1"),
+    "^@fixtures/(.*)": resolve(__dirname, "./__tests__/fixtures/$1"),
   },
 };

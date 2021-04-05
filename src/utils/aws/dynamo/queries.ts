@@ -60,7 +60,7 @@ const fetchAllTables = async (
 export const listTables = async (
   profile: string,
   region: string
-): Promise<PreloaderResponse<ListTablesCommandOutput>> => {
+): Promise<PreloaderResponse<ListTablesCommandOutput | null>> => {
   let result;
 
   try {
@@ -88,7 +88,7 @@ export const describeTable = async (
   profile: string,
   region: string,
   tableName: string
-): Promise<PreloaderResponse<DescribeTableCommandOutput>> => {
+): Promise<PreloaderResponse<DescribeTableCommandOutput | null>> => {
   let result;
 
   try {
@@ -118,7 +118,7 @@ export const scan = async (
   profile: string,
   region: string,
   options: ScanCommandInput
-): Promise<PreloaderResponse<ScanCommandOutput>> => {
+): Promise<PreloaderResponse<ScanCommandOutput | null>> => {
   let result;
 
   try {
