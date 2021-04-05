@@ -18,7 +18,7 @@ import { fetchCredentials } from "@src/utils/aws/credentials";
 
 const clientConstructor = async (profile: string, region: string) => {
   const credentials = await fetchCredentials(profile);
-
+  console.info({ credentials });
   const client = new DynamoDBClient({
     region,
     credentials,
