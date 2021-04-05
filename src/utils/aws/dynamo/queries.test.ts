@@ -185,6 +185,12 @@ describe("Queries", () => {
         TableName: "test-table",
       });
     });
+    it("query", async () => {
+      // Act
+      result = await query("cgu", "eu-west-1", {
+        TableName: "test-table",
+      });
+    });
     it("describeTable", async () => {
       // Act
       result = await describeTable("cgu", "eu-west-1", "test-table");

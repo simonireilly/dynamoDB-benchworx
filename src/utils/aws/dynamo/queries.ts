@@ -156,3 +156,33 @@ export const scan = async (
     };
   }
 };
+
+export const query = async (
+  profile: string,
+  region: string,
+  options: ScanCommandInput
+): Promise<PreloaderResponse<ScanCommandOutput | null>> => {
+  let result;
+
+  try {
+    const client = await clientConstructor(profile, region);
+
+    const documentClient = DynamoDBDocument.from(client);
+
+    result = await documentClient.query(options);
+
+    return {
+      type: "success",
+      data: result,
+      message: `Queried table: ${options.TableName}`,
+      details: `Result count: ${result.Count}`,
+    };
+  } catch (e) {
+    return {
+      type: "error",
+      data: null,
+      message: `Query operation failed: ${options.TableName}`,
+      details: e.message,
+    };
+  }
+};
