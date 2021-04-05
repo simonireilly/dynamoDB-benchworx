@@ -2,6 +2,7 @@ import React, {
   ReactElement,
   SyntheticEvent,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import {
@@ -34,8 +35,12 @@ export const QueryPlanner = (): ReactElement => {
   ) => {
     setOperation(newOperation);
   };
-  const [indexName, setIndexName] = useState<string>();
+  const [indexName, setIndexName] = useState<string>("primary");
   const [limit, setLimit] = useState<number>(100);
+
+  useEffect(() => {
+    setIndexName("primary");
+  }, [table?.Table?.TableName]);
 
   const handleTableSelection = (
     e: React.ChangeEvent<{
@@ -52,7 +57,7 @@ export const QueryPlanner = (): ReactElement => {
       TableName: table?.Table?.TableName,
     };
 
-    if (indexName) options.IndexName = indexName;
+    if (indexName !== "primary") options.IndexName = indexName;
     if (limit) options.Limit = limit;
 
     const results = await scan(
@@ -104,7 +109,7 @@ export const QueryPlanner = (): ReactElement => {
             value={indexName}
             onChange={handleTableSelection}
           >
-            {table && <option value={null}>{table.Table.TableName}</option>}
+            {table && <option value="primary">{table.Table.TableName}</option>}
             {table && table.Table.LocalSecondaryIndexes && (
               <optgroup label="Local Secondary Indexes">
                 {table.Table.LocalSecondaryIndexes.map((lsi) => (

@@ -19,7 +19,7 @@ import { fetchCredentials } from "@src/utils/aws/credentials";
 import { listAwsConfig } from "../accounts/config";
 
 const clientConstructor = async (profile: string, region: string) => {
-  if (!profile) throw Error("no profile provided to client");
+  if (!profile) throw Error("No profile provided to client");
 
   const credentials = await fetchCredentials(profile);
   const configurations = await listAwsConfig();
