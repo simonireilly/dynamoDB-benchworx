@@ -35,6 +35,7 @@ jobs:
 
       - name: Append current screenshot
         uses: peter-evans/commit-comment@v1
+        if: github.actor != 'dependabot[bot]' || github.actor != 'dependabot-preview[bot]'
         with:
           body: |
             ### 📷 Snapshot Tests
