@@ -11,9 +11,12 @@ import {
   NativeSelect,
   TextField,
   Button,
+  FormControlLabel,
+  Switch,
 } from "@material-ui/core";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
+import { primaryKeyCondition } from "@src/utils/aws/dynamo/builders";
 import React, {
   ReactElement,
   SyntheticEvent,
@@ -27,20 +30,6 @@ type MergedIndexes = (
   | GlobalSecondaryIndexDescription
 )[];
 
-const sortKeyConditions = {
-  equal: (val: string): string => `= ${val}`,
-  lessThan: (val: string): string => `< ${val}`,
-  lessThanOrEqualTo: (val: string): string => `<= ${val}`,
-  greaterThan: (val: string): string => `> ${val}`,
-  greaterThanOrEqualTo: (val: string): string => `>= ${val}`,
-  between: (
-    val: string,
-    { lower, upper }: { lower: string; upper: string }
-  ): string => `BETWEEN ${lower} AND ${upper}`,
-  begins_with: (sortKeyName: string, val: string): string =>
-    `begins_with(${sortKeyName}, ${val})`,
-};
-
 export const Query = (): ReactElement => {
   const {
     table,
@@ -53,6 +42,7 @@ export const Query = (): ReactElement => {
   const [indexName, setIndexName] = useState<string>("primary");
   const [allIndexes, setAllIndexes] = useState<MergedIndexes>([]);
   const [limit, setLimit] = useState<number>(100);
+  const [scanIndexForward, setScanIndexForward] = useState<boolean>(true);
   const [pk, setPk] = useState<string>("");
   const [sk, setSk] = useState<string>("");
   const [hashKey, setHashKey] = useState<string>("");
@@ -101,20 +91,10 @@ export const Query = (): ReactElement => {
 
   const getResults = async (e: SyntheticEvent) => {
     e.preventDefault();
+    // TODO: Add the builder classes here, that create nice queries from simple input arguments
     const options: QueryCommandInput = {
       TableName: table?.Table?.TableName,
-      KeyConditionExpression: `#pk = :pk and ${sortKeyConditions.begins_with(
-        "#sk",
-        ":sk"
-      )}`,
-      ExpressionAttributeNames: {
-        "#pk": hashKey,
-        "#sk": sortKey,
-      },
-      ExpressionAttributeValues: {
-        ":pk": pk,
-        ":sk": sk,
-      },
+      ...primaryKeyCondition({ primaryKeyName: hashKey, primaryKeyValue: pk }),
     };
 
     if (indexName !== "primary") options.IndexName = indexName;
@@ -218,6 +198,26 @@ export const Query = (): ReactElement => {
             label="Item Limit"
             variant="outlined"
             margin="dense"
+          />
+        </FormControl>
+
+        <FormControl
+          data-test="number-limit"
+          variant="outlined"
+          className={classes.formControl}
+          margin="dense"
+        >
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={scanIndexForward}
+                onChange={() => setScanIndexForward((c) => !c)}
+                name="checkedB"
+                color="primary"
+              />
+            }
+            label={`Scan Index Forward (ascending order)`}
           />
         </FormControl>
         <FormControl
