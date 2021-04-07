@@ -49,7 +49,7 @@ export const Query = (): ReactElement => {
   const [limit, setLimit] = useState<number>(100);
   const [scanIndexForward, setScanIndexForward] = useState<boolean>(true);
   const [pk, setPk] = useState<string>("");
-  const [sk, setSk] = useState<string>("");
+  const [sk, setSk] = useState<string | { lower: string; upper: string }>("");
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
   const [queryString, setQueryString] = useState<string>("");
@@ -159,6 +159,16 @@ export const Query = (): ReactElement => {
     if (results.type === "success") setItems(results.data.Items);
   };
 
+  const handleKeyConditionChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const currentCondition = String(e.target.value);
+    setSkCondition(currentCondition as keyof typeof sortKeyConditions);
+    currentCondition === "between"
+      ? setSk({ lower: "", upper: "" })
+      : setSk("");
+  };
+
   return (
     <form onSubmit={getResults}>
       <Box display="flex" alignItems="flex-start" flexDirection="column">
@@ -225,9 +235,7 @@ export const Query = (): ReactElement => {
             <NativeSelect
               variant="outlined"
               value={skCondition}
-              onChange={(e) =>
-                setSkCondition(e.target.value as keyof typeof sortKeyConditions)
-              }
+              onChange={handleKeyConditionChange}
             >
               {Object.keys(sortKeyConditions).map((key) => (
                 <option value={key} key={key}>
@@ -235,15 +243,56 @@ export const Query = (): ReactElement => {
                 </option>
               ))}
             </NativeSelect>
-            <TextField
-              id="text-sk"
-              label={`Sort Key (${sortKey})`}
-              disabled={!sortKey}
-              variant="outlined"
-              margin="dense"
-              value={sk}
-              onChange={(e) => setSk(e.target.value)}
-            />
+            {typeof sk === "object" ? (
+              <>
+                <TextField
+                  id="text-sk-lower"
+                  label={`Lower (${sortKey})`}
+                  disabled={!sortKey}
+                  variant="outlined"
+                  margin="dense"
+                  value={typeof sk === "object" ? sk.lower : ""}
+                  onChange={(e) =>
+                    setSk((current) => {
+                      if (typeof current === "object")
+                        return { ...current, lower: e.target.value };
+                      return {
+                        lower: e.target.value,
+                        upper: "",
+                      };
+                    })
+                  }
+                />
+                <TextField
+                  id="text-sk-upper"
+                  label={`Upper (${sortKey})`}
+                  disabled={!sortKey}
+                  variant="outlined"
+                  margin="dense"
+                  value={typeof sk === "object" ? sk.upper : ""}
+                  onChange={(e) =>
+                    setSk((current) => {
+                      if (typeof current === "object")
+                        return { ...current, upper: e.target.value };
+                      return {
+                        upper: e.target.value,
+                        lower: "",
+                      };
+                    })
+                  }
+                />
+              </>
+            ) : (
+              <TextField
+                id="text-sk"
+                label={`Sort Key (${sortKey})`}
+                disabled={!sortKey}
+                variant="outlined"
+                margin="dense"
+                value={sk}
+                onChange={(e) => setSk(e.target.value)}
+              />
+            )}
           </Box>
         </FormControl>
         <FormControl

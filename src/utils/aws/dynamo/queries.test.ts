@@ -164,6 +164,50 @@ describe("Queries", () => {
     });
   });
 
+  describe("query", () => {
+    it("calls scan command on the document client", async () => {
+      const Items = [
+        {
+          ReplyDateTime: {
+            S: "2019-10-31 11:27:17",
+          },
+          Message: {
+            S: "DynamoDB Thread 1 Reply 2 text",
+          },
+          PostedBy: {
+            S: "User B",
+          },
+          Id: {
+            S: "Amazon DynamoDB#DynamoDB Thread 1",
+          },
+        },
+      ];
+      // Mock post Request
+      nock("https://dynamodb.eu-west-1.amazonaws.com").post("/").reply(200, {
+        Count: 1,
+        Items,
+        ScannedCount: 1,
+      });
+
+      // Act
+      const result = await query("cgu", "eu-west-1", {
+        TableName: "test-table",
+      });
+
+      // assert
+      expect(result.data.Items).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ReplyDateTime: "2019-10-31 11:27:17",
+            Message: "DynamoDB Thread 1 Reply 2 text",
+            PostedBy: "User B",
+            Id: "Amazon DynamoDB#DynamoDB Thread 1",
+          }),
+        ])
+      );
+    });
+  });
+
   describe("error handling", () => {
     let result: PreloaderResponse<any>;
     beforeEach(() => {
