@@ -2,6 +2,7 @@ import {
   primaryKeyCondition,
   PartialKeyExpression,
   sortKeyCondition,
+  sortKeyConditions,
 } from "./builders";
 
 describe("primaryKeyCondition", () => {
@@ -57,4 +58,56 @@ describe("sortKeyCondition", () => {
       } as PartialKeyExpression)
     );
   });
+});
+
+describe("sortKeyConditions", () => {
+  const cases: {
+    condition: keyof typeof sortKeyConditions;
+    sortKey: string;
+    expectedResult: string;
+  }[] = [
+    {
+      condition: "=",
+      sortKey: "dob",
+      expectedResult: "#dob = :dob",
+    },
+    {
+      condition: "<",
+      sortKey: "gsi_1_sk",
+      expectedResult: "#gsi_1_sk < :gsi_1_sk",
+    },
+    {
+      condition: "<=",
+      sortKey: "gsi_2_sk",
+      expectedResult: "#gsi_2_sk <= :gsi_2_sk",
+    },
+    {
+      condition: ">",
+      sortKey: "lsi_sk",
+      expectedResult: "#lsi_sk > :lsi_sk",
+    },
+    {
+      condition: ">=",
+      sortKey: "gsi_sk",
+      expectedResult: "#gsi_sk >= :gsi_sk",
+    },
+    {
+      condition: "between",
+      sortKey: "sk1",
+      expectedResult: "#sk1 BETWEEN :sk1_lower AND :sk1_upper",
+    },
+    {
+      condition: "beginsWith",
+      sortKey: "sk",
+      expectedResult: "begins_with(#sk, :sk)",
+    },
+  ];
+
+  test.each(cases)(
+    `invoke %o.condition returning string`,
+    ({ condition, sortKey, expectedResult }) => {
+      const result = sortKeyConditions[condition](sortKey);
+      expect(result).toEqual(expectedResult);
+    }
+  );
 });

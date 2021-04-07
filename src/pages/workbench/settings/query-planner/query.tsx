@@ -16,7 +16,12 @@ import {
 } from "@material-ui/core";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
-import { primaryKeyCondition } from "@src/utils/aws/dynamo/builders";
+import {
+  primaryKeyCondition,
+  sortKeyCondition,
+  sortKeyConditions,
+  PartialKeyExpression,
+} from "@src/utils/aws/dynamo/builders";
 import React, {
   ReactElement,
   SyntheticEvent,
@@ -47,6 +52,10 @@ export const Query = (): ReactElement => {
   const [sk, setSk] = useState<string>("");
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
+  const [queryString, setQueryString] = useState<string>("");
+  const [skCondition, setSkCondition] = useState<
+    keyof typeof sortKeyConditions
+  >("=");
 
   const getKeySchema = (keySchema: KeySchemaElement[]) => {
     if (!keySchema || !keySchema.length) return;
@@ -91,20 +100,61 @@ export const Query = (): ReactElement => {
 
   const getResults = async (e: SyntheticEvent) => {
     e.preventDefault();
-    // TODO: Add the builder classes here, that create nice queries from simple input arguments
+
     const options: QueryCommandInput = {
       TableName: table?.Table?.TableName,
-      ...primaryKeyCondition({ primaryKeyName: hashKey, primaryKeyValue: pk }),
+    };
+
+    const pkAttrs =
+      pk &&
+      primaryKeyCondition({
+        primaryKeyName: hashKey,
+        primaryKeyValue: pk,
+      });
+
+    const skAttrs =
+      sk &&
+      sortKeyCondition({
+        sortKeyName: sortKey,
+        sortKeyValue: sk,
+        condition: skCondition,
+      });
+
+    const attrs: PartialKeyExpression = {
+      KeyConditionExpression: [
+        pkAttrs.KeyConditionExpression,
+        skAttrs.KeyConditionExpression,
+      ]
+        .filter(Boolean)
+        .join(" and "),
+      ExpressionAttributeNames: {
+        ...pkAttrs.ExpressionAttributeNames,
+        ...skAttrs.ExpressionAttributeNames,
+      },
+      ExpressionAttributeValues: {
+        ...pkAttrs.ExpressionAttributeValues,
+        ...skAttrs.ExpressionAttributeValues,
+      },
     };
 
     if (indexName !== "primary") options.IndexName = indexName;
     if (limit) options.Limit = limit;
 
-    const results = await query(
-      credentials.profile,
-      credentials.region,
-      options
+    setQueryString(
+      JSON.stringify(
+        {
+          ...options,
+          ...attrs,
+        },
+        null,
+        2
+      )
     );
+
+    const results = await query(credentials.profile, credentials.region, {
+      ...options,
+      ...attrs,
+    });
     setNotification(results);
     if (results.type === "success") setItems(results.data.Items);
   };
@@ -171,15 +221,30 @@ export const Query = (): ReactElement => {
           className={classes.formControl}
           margin="dense"
         >
-          <TextField
-            id="text-sk"
-            label={`Sort Key (${sortKey})`}
-            disabled={!sortKey}
-            variant="outlined"
-            margin="dense"
-            value={sk}
-            onChange={(e) => setSk(e.target.value)}
-          />
+          <Box display="flex">
+            <NativeSelect
+              variant="outlined"
+              value={skCondition}
+              onChange={(e) =>
+                setSkCondition(e.target.value as keyof typeof sortKeyConditions)
+              }
+            >
+              {Object.keys(sortKeyConditions).map((key) => (
+                <option value={key} key={key}>
+                  {key}
+                </option>
+              ))}
+            </NativeSelect>
+            <TextField
+              id="text-sk"
+              label={`Sort Key (${sortKey})`}
+              disabled={!sortKey}
+              variant="outlined"
+              margin="dense"
+              value={sk}
+              onChange={(e) => setSk(e.target.value)}
+            />
+          </Box>
         </FormControl>
         <FormControl
           data-test="number-limit"
@@ -202,7 +267,7 @@ export const Query = (): ReactElement => {
         </FormControl>
 
         <FormControl
-          data-test="number-limit"
+          data-test="switch-scan"
           variant="outlined"
           className={classes.formControl}
           margin="dense"
@@ -230,6 +295,9 @@ export const Query = (): ReactElement => {
             Execute
           </Button>
         </FormControl>
+        <code>
+          <pre>{queryString}</pre>
+        </code>
       </Box>
     </form>
   );

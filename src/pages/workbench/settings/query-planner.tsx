@@ -7,7 +7,7 @@ import { Query } from "@src/pages/workbench/settings/query-planner/query";
 
 export const QueryPlanner = (): ReactElement => {
   const classes = useStyles();
-  const [operation, setOperation] = useState<string | null>("scan");
+  const [operation, setOperation] = useState<string | null>("query");
 
   const handleOperation = (
     event: React.MouseEvent<HTMLElement>,

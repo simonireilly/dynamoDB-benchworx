@@ -1,15 +1,11 @@
 import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 
 export const sortKeyConditions = {
-  equal: (sortKeyName: string): string => `#${sortKeyName} = :${sortKeyName}`,
-  lessThan: (sortKeyName: string): string =>
-    `#${sortKeyName} < :${sortKeyName}`,
-  lessThanOrEqualTo: (sortKeyName: string): string =>
-    `#${sortKeyName} <= :${sortKeyName}`,
-  greaterThan: (sortKeyName: string): string =>
-    `#${sortKeyName} > :${sortKeyName}`,
-  greaterThanOrEqualTo: (sortKeyName: string): string =>
-    `#${sortKeyName} >= :${sortKeyName}`,
+  "=": (sortKeyName: string): string => `#${sortKeyName} = :${sortKeyName}`,
+  "<": (sortKeyName: string): string => `#${sortKeyName} < :${sortKeyName}`,
+  "<=": (sortKeyName: string): string => `#${sortKeyName} <= :${sortKeyName}`,
+  ">": (sortKeyName: string): string => `#${sortKeyName} > :${sortKeyName}`,
+  ">=": (sortKeyName: string): string => `#${sortKeyName} >= :${sortKeyName}`,
   between: (sortKeyName: string): string =>
     `#${sortKeyName} BETWEEN :${sortKeyName}_lower AND :${sortKeyName}_upper`,
   beginsWith: (sortKeyName: string): string =>
@@ -69,12 +65,3 @@ export const sortKeyCondition = ({
   },
   ExpressionAttributeValues: sortKeyAttributeValues(sortKeyName, sortKeyValue),
 });
-
-// export const queryBuilder = ({ TableName }): QueryCommandInput => ({
-//   TableName,
-//   KeyConditionExpression: [primaryKeyCondition, sortKeyCondition]
-//     .filter(Boolean)
-//     .join(" and "),
-//   ExpressionAttributeNames: {},
-//   ExpressionAttributeValues: {},
-// });
