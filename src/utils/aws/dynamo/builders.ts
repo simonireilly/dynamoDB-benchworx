@@ -1,5 +1,51 @@
 import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
 
+export const constructQuery = ({
+  primaryKeyName,
+  primaryKeyValue,
+  sortKeyName,
+  sortKeyValue,
+  condition,
+}: {
+  primaryKeyName: string;
+  primaryKeyValue: string;
+  sortKeyName?: string;
+  sortKeyValue?: string | { upper: string; lower: string };
+  condition?: keyof typeof sortKeyConditions;
+}): PartialKeyExpression => {
+  const pkAttrs =
+    primaryKeyValue &&
+    primaryKeyCondition({
+      primaryKeyName,
+      primaryKeyValue,
+    });
+
+  const skAttrs = sortKeyValue
+    ? sortKeyCondition({
+        sortKeyName,
+        sortKeyValue,
+        condition,
+      })
+    : {};
+
+  return {
+    KeyConditionExpression: [
+      pkAttrs.KeyConditionExpression,
+      skAttrs.KeyConditionExpression,
+    ]
+      .filter(Boolean)
+      .join(" and "),
+    ExpressionAttributeNames: {
+      ...pkAttrs.ExpressionAttributeNames,
+      ...skAttrs.ExpressionAttributeNames,
+    },
+    ExpressionAttributeValues: {
+      ...pkAttrs.ExpressionAttributeValues,
+      ...skAttrs.ExpressionAttributeValues,
+    },
+  };
+};
+
 export const sortKeyConditions = {
   "=": (sortKeyName: string): string => `#${sortKeyName} = :${sortKeyName}`,
   "<": (sortKeyName: string): string => `#${sortKeyName} < :${sortKeyName}`,

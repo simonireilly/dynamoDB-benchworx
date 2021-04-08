@@ -21,6 +21,7 @@ import {
   sortKeyCondition,
   sortKeyConditions,
   PartialKeyExpression,
+  constructQuery,
 } from "@src/utils/aws/dynamo/builders";
 import React, {
   ReactElement,
@@ -105,37 +106,13 @@ export const Query = (): ReactElement => {
       TableName: table?.Table?.TableName,
     };
 
-    const pkAttrs =
-      pk &&
-      primaryKeyCondition({
-        primaryKeyName: hashKey,
-        primaryKeyValue: pk,
-      });
-
-    const skAttrs =
-      sk &&
-      sortKeyCondition({
-        sortKeyName: sortKey,
-        sortKeyValue: sk,
-        condition: skCondition,
-      });
-
-    const attrs: PartialKeyExpression = {
-      KeyConditionExpression: [
-        pkAttrs.KeyConditionExpression,
-        skAttrs.KeyConditionExpression,
-      ]
-        .filter(Boolean)
-        .join(" and "),
-      ExpressionAttributeNames: {
-        ...pkAttrs.ExpressionAttributeNames,
-        ...skAttrs.ExpressionAttributeNames,
-      },
-      ExpressionAttributeValues: {
-        ...pkAttrs.ExpressionAttributeValues,
-        ...skAttrs.ExpressionAttributeValues,
-      },
-    };
+    const attrs = constructQuery({
+      primaryKeyName: hashKey,
+      primaryKeyValue: pk,
+      sortKeyName: sortKey,
+      sortKeyValue: sk,
+      condition: skCondition,
+    });
 
     if (indexName !== "primary") options.IndexName = indexName;
     if (limit) options.Limit = limit;
@@ -173,7 +150,7 @@ export const Query = (): ReactElement => {
     <form onSubmit={getResults}>
       <Box display="flex" alignItems="flex-start" flexDirection="column">
         <FormControl
-          data-test="select-profile"
+          data-test="select-index"
           variant="outlined"
           className={classes.formControl}
           margin="dense"
@@ -217,7 +194,7 @@ export const Query = (): ReactElement => {
         >
           <TextField
             id="text-pk"
-            label={`Primary Key (${hashKey})`}
+            label={hashKey && `Primary Key (${hashKey})`}
             disabled={!hashKey}
             variant="outlined"
             margin="dense"
@@ -231,7 +208,7 @@ export const Query = (): ReactElement => {
           className={classes.formControl}
           margin="dense"
         >
-          <Box display="flex">
+          <Box display="flex" flexDirection="column">
             <NativeSelect
               variant="outlined"
               value={skCondition}
@@ -247,7 +224,7 @@ export const Query = (): ReactElement => {
               <>
                 <TextField
                   id="text-sk-lower"
-                  label={`Lower (${sortKey})`}
+                  label={sortKey && `Lower (${sortKey})`}
                   disabled={!sortKey}
                   variant="outlined"
                   margin="dense"
@@ -265,7 +242,7 @@ export const Query = (): ReactElement => {
                 />
                 <TextField
                   id="text-sk-upper"
-                  label={`Upper (${sortKey})`}
+                  label={sortKey && `Upper (${sortKey})`}
                   disabled={!sortKey}
                   variant="outlined"
                   margin="dense"
@@ -285,7 +262,7 @@ export const Query = (): ReactElement => {
             ) : (
               <TextField
                 id="text-sk"
-                label={`Sort Key (${sortKey})`}
+                label={sortKey && `Sort Key (${sortKey})`}
                 disabled={!sortKey}
                 variant="outlined"
                 margin="dense"

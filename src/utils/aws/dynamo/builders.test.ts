@@ -1,9 +1,53 @@
 import {
+  constructQuery,
   primaryKeyCondition,
   PartialKeyExpression,
   sortKeyCondition,
   sortKeyConditions,
 } from "./builders";
+
+describe("constructQuery", () => {
+  it("builds a composite", () => {
+    const query = constructQuery({
+      primaryKeyName: "pk",
+      primaryKeyValue: "2",
+      sortKeyName: "sk",
+      sortKeyValue: { upper: "2", lower: "1" },
+      condition: "between",
+    });
+
+    expect(query).toEqual(
+      expect.objectContaining({
+        ExpressionAttributeNames: {
+          "#pk": "pk",
+          "#sk": "sk",
+        },
+        ExpressionAttributeValues: {
+          ":pk": "2",
+          ":sk_lower": "1",
+          ":sk_upper": "2",
+        },
+        KeyConditionExpression:
+          "#pk = :pk and #sk BETWEEN :sk_lower AND :sk_upper",
+      })
+    );
+  });
+
+  it("builds a simple query", () => {
+    const query = constructQuery({
+      primaryKeyName: "pk",
+      primaryKeyValue: "2",
+    });
+
+    expect(query).toEqual(
+      expect.objectContaining({
+        ExpressionAttributeNames: { "#pk": "pk" },
+        ExpressionAttributeValues: { ":pk": "2" },
+        KeyConditionExpression: "#pk = :pk",
+      })
+    );
+  });
+});
 
 describe("primaryKeyCondition", () => {
   it("creates a partial for deep merging", () => {
