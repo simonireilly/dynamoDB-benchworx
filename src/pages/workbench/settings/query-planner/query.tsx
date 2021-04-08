@@ -17,10 +17,7 @@ import {
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
 import {
-  primaryKeyCondition,
-  sortKeyCondition,
   sortKeyConditions,
-  PartialKeyExpression,
   constructQuery,
 } from "@src/utils/aws/dynamo/builders";
 import React, {
