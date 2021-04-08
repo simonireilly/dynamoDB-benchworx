@@ -42,6 +42,11 @@ export const DataTable = ({ items, hashKey, sortKey }: Props): ReactElement => {
     items.length &&
     items.map<GridRowData>((row) => ({
       // Assign ID to the pk attribute
+      // TODO: SOmetimes there is a column already called ID, and this causes the
+      // table to break because it will override the id to another value
+      //
+      // Since we are only using the onClick for this data table we could replace
+      // it with a simpler, dynamoDB specific table
       id: constructCompositeKey(row),
       ...row,
     }));

@@ -12,6 +12,8 @@ import {
 
 import {
   DynamoDBDocument,
+  PutCommandInput,
+  PutCommandOutput,
   ScanCommandInput,
   ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
@@ -182,6 +184,36 @@ export const query = async (
       type: "error",
       data: null,
       message: `Query operation failed: ${options.TableName}`,
+      details: e.message,
+    };
+  }
+};
+
+export const put = async (
+  profile: string,
+  region: string,
+  options: PutCommandInput
+): Promise<PreloaderResponse<PutCommandOutput | null>> => {
+  let result;
+
+  try {
+    const client = await clientConstructor(profile, region);
+
+    const documentClient = DynamoDBDocument.from(client);
+
+    result = await documentClient.put(options);
+
+    return {
+      type: "success",
+      data: result,
+      message: `Put item in table: ${options.TableName}`,
+      details: `Consumed Capacity: ${result.ConsumedCapacity.CapacityUnits} WCU`,
+    };
+  } catch (e) {
+    return {
+      type: "error",
+      data: null,
+      message: `Put operation failed: ${options.TableName}`,
       details: e.message,
     };
   }
