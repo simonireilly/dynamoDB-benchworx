@@ -10,7 +10,12 @@ console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
 
-import { describeTable, listTables, scan } from "@src/utils/aws/dynamo/queries";
+import {
+  describeTable,
+  listTables,
+  scan,
+  query,
+} from "@src/utils/aws/dynamo/queries";
 import { listAwsConfig } from "@src/utils/aws/accounts/config";
 import { authenticator } from "@src/utils/aws/credentials";
 
@@ -22,6 +27,7 @@ declare global {
       listAwsConfig: typeof listAwsConfig;
       listTables: typeof listTables;
       scan: typeof scan;
+      query: typeof query;
     };
   }
 }
@@ -42,4 +48,5 @@ contextBridge.exposeInMainWorld("aws", {
   listAwsConfig,
   listTables,
   scan,
+  query,
 });

@@ -26,8 +26,6 @@ export const listAwsConfig = async (): Promise<
       safeConfigConstructor
     );
 
-    console.info(data);
-
     return {
       type: "success",
       data,

@@ -19,7 +19,7 @@ import { fetchCredentials } from "@src/utils/aws/credentials";
 import { listAwsConfig } from "../accounts/config";
 
 const clientConstructor = async (profile: string, region: string) => {
-  if (!profile) throw Error("no profile provided to client");
+  if (!profile) throw Error("No profile provided to client");
 
   const credentials = await fetchCredentials(profile);
   const configurations = await listAwsConfig();
@@ -152,6 +152,36 @@ export const scan = async (
       type: "error",
       data: null,
       message: `Scan operation failed: ${options.TableName}`,
+      details: e.message,
+    };
+  }
+};
+
+export const query = async (
+  profile: string,
+  region: string,
+  options: ScanCommandInput
+): Promise<PreloaderResponse<ScanCommandOutput | null>> => {
+  let result;
+
+  try {
+    const client = await clientConstructor(profile, region);
+
+    const documentClient = DynamoDBDocument.from(client);
+
+    result = await documentClient.query(options);
+
+    return {
+      type: "success",
+      data: result,
+      message: `Queried table: ${options.TableName}`,
+      details: `Result count: ${result.Count}`,
+    };
+  } catch (e) {
+    return {
+      type: "error",
+      data: null,
+      message: `Query operation failed: ${options.TableName}`,
       details: e.message,
     };
   }

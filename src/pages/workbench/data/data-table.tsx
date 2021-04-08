@@ -9,12 +9,7 @@ import {
 import { ElectronStore } from "@src/contexts/electron-context";
 
 export const DataTable = (): ReactElement => {
-  const {
-    aws: { scan },
-    table,
-    items,
-    setItem,
-  } = useContext(ElectronStore);
+  const { table, items, setItem } = useContext(ElectronStore);
   const [hashKey, setHashKey] = useState<string>("");
   const [sortKey, setSortKey] = useState<string>("");
 
