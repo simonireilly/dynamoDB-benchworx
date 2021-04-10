@@ -1,7 +1,7 @@
 {
   "name": "BenchWorx",
   "productName": "BenchWorx",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
