@@ -17,6 +17,9 @@ Open source GUI for working with AWS DynamoDB.
     - [Assume Role with MFA](#assume-role-with-mfa)
     - [Local](#local)
   - [Contributing](#contributing)
+    - [Local Run](#local-run)
+    - [Tests](#tests)
+    - [End to End testing](#end-to-end-testing)
   - [Releasing](#releasing)
 
 ## Features
@@ -107,12 +110,37 @@ endpoint=http://localhost:8000
 
 ## Contributing
 
-Running the project locally by pull/forking.
+### Local Run
+
+Running the project locally by pull/forking:
 
 ```
 yarn install
 
 yarn start
+```
+
+### Tests
+
+jest is the test runner used for unit testing:
+
+```
+yarn test
+
+```
+
+### End to End testing
+
+Cypress is used for end to end testing using component mounting:
+
+```
+yarn cy
+```
+
+To update failing snapshots run:
+
+```
+yarn cy:u
 ```
 
 ## Releasing
