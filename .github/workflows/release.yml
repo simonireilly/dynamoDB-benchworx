@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -18,7 +20,7 @@ jobs:
       - name: Install packages
         run: yarn install
 
-      - name: Electron forge publish
+      - name: On Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn pub --dry-run
+        run: yarn pub
