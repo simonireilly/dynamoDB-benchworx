@@ -1,7 +1,7 @@
 {
   "name": "BenchWorx",
   "productName": "BenchWorx",
-  "version": "v0.0.1-alpha.3",
+  "version": "0.0.1-alpha.3",
   "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
@@ -14,7 +14,8 @@
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
     "prepare": "husky install",
-    "release": "npx release-it --dry-run --no-npm.publish"
+    "release": "npx release-it --dry-run --no-npm.publish",
+    "pub:beta": "release-it release-it --preRelease=beta --dry-run --no-npm.publish"
   },
   "lint-staged": {
     "*.ts|*.tsx": "yarn lint"
