@@ -13,12 +13,16 @@
     "cy:u": "cypress run --env updateSnapshots=true",
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "npx release-it --dry-run --no-npm.publish --ci"
   },
   "lint-staged": {
     "*.ts|*.tsx": "yarn lint"
   },
-  "keywords": [],
+  "keywords": [
+    "DynamoDB",
+    "GUI"
+  ],
   "author": {
     "name": "Simon Reilly",
     "email": "simon.reilly@gmail.com"
