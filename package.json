@@ -14,8 +14,7 @@
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
     "prepare": "husky install",
-    "release": "npx release-it --dry-run --no-npm.publish",
-    "pub:beta": "release-it release-it --preRelease=beta --dry-run --no-npm.publish"
+    "pub:beta": "release-it --preRelease=beta --no-npm.publish"
   },
   "lint-staged": {
     "*.ts|*.tsx": "yarn lint"
