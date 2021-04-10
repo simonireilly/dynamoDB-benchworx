@@ -10,7 +10,6 @@ import { ElectronStore } from "@src/contexts/electron-context";
 import { TextField, IconButton, Box } from "@material-ui/core";
 import { Refresh } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
-import { classnames } from "@material-ui/data-grid";
 import { useStyles } from "@src/styles";
 
 export const SelectTable = (): ReactElement => {
@@ -18,6 +17,8 @@ export const SelectTable = (): ReactElement => {
     setNotification,
     table,
     setTable,
+    setItems,
+    setItem,
     aws: { listTables, describeTable },
     credentials,
   } = useContext(ElectronStore);
@@ -28,6 +29,7 @@ export const SelectTable = (): ReactElement => {
   >([]);
 
   const fetchTables = async () => {
+    console.info("Fetching all tables");
     const results = await listTables(credentials.profile, credentials.region);
     setNotification(results);
     if (results.type === "success") setTables(results.data.TableNames);
@@ -43,6 +45,8 @@ export const SelectTable = (): ReactElement => {
   ) => {
     if (newInputValue === null) {
       setTable(null);
+      setItems([]);
+      setItem(null);
       setNotification({
         type: "info",
         message: "Cleared tables",

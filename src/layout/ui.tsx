@@ -8,7 +8,7 @@ export const UI = (): ReactElement => {
   return (
     <>
       <Header />
-      <Box m={1} p={1}>
+      <Box p={1}>
         <Main />
       </Box>
       <Notification />

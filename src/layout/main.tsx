@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 import { DataTable } from "@src/pages/workbench/data/data-table";
-import { Box, Paper } from "@material-ui/core";
+import { Box, Button, Paper, Toolbar } from "@material-ui/core";
 import { QueryPlanner } from "@src/pages/workbench/settings/query-planner";
 import { ItemViewer } from "@src/pages/workbench/data/item-viewier";
 
@@ -21,9 +21,7 @@ export const Main = (): ReactElement => {
           <QueryPlanner />
         </Box>
         <Box flexGrow={2} display="flex" flexDirection="column" p={2}>
-          <Box flex={1}>
-            <ItemViewer />
-          </Box>
+          <ItemViewer />
           <Box flex={1}>
             <DataTable />
           </Box>

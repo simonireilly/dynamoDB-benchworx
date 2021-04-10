@@ -1,17 +1,23 @@
 import { mocked } from "ts-jest/utils";
-import { describeTable, listTables, scan } from "./queries";
+import { describeTable, listTables, scan, query, put } from "./queries";
 import nock from "nock";
 import {
   ListTablesCommandInput,
   ListTablesCommandOutput,
 } from "@aws-sdk/client-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
+import { listAwsConfig } from "@src/utils/aws/accounts/config";
 import { describeTableResponse } from "@fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
-jest.spyOn(global.console, "info");
+const infoSpy = jest.spyOn(global.console, "info");
+const errorSpy = jest.spyOn(global.console, "error");
+
 jest.mock("@src/utils/aws/credentials");
 const mockedFetchCredentials = mocked(fetchCredentials);
+
+jest.mock("@src/utils/aws/accounts/config");
+const mockedListAwsConfig = mocked(listAwsConfig);
 
 describe("Queries", () => {
   beforeEach(() => {
@@ -21,6 +27,15 @@ describe("Queries", () => {
     mockedFetchCredentials.mockResolvedValueOnce({
       accessKeyId: "test",
       secretAccessKey: "secret",
+    });
+
+    mockedListAwsConfig.mockResolvedValueOnce({
+      type: "success",
+      data: [
+        { profile: "cgu", mfa: false, assumeRole: false, region: "eu-west-1" },
+      ],
+      message: null,
+      details: null,
     });
   });
 
@@ -150,6 +165,88 @@ describe("Queries", () => {
     });
   });
 
+  describe("query", () => {
+    it("calls scan command on the document client", async () => {
+      const Items = [
+        {
+          ReplyDateTime: {
+            S: "2019-10-31 11:27:17",
+          },
+          Message: {
+            S: "DynamoDB Thread 1 Reply 2 text",
+          },
+          PostedBy: {
+            S: "User B",
+          },
+          Id: {
+            S: "Amazon DynamoDB#DynamoDB Thread 1",
+          },
+        },
+      ];
+      // Mock post Request
+      nock("https://dynamodb.eu-west-1.amazonaws.com").post("/").reply(200, {
+        Count: 1,
+        Items,
+        ScannedCount: 1,
+      });
+
+      // Act
+      const result = await query("cgu", "eu-west-1", {
+        TableName: "test-table",
+      });
+
+      // assert
+      expect(result.data.Items).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ReplyDateTime: "2019-10-31 11:27:17",
+            Message: "DynamoDB Thread 1 Reply 2 text",
+            PostedBy: "User B",
+            Id: "Amazon DynamoDB#DynamoDB Thread 1",
+          }),
+        ])
+      );
+    });
+  });
+
+  describe("put", () => {
+    it("calls scan command on the document client", async () => {
+      const Item = {
+        ReplyDateTime: "2019-10-31 11:27:17",
+        Message: "DynamoDB Thread 1 Reply 2 text",
+        PostedBy: "User B",
+        Id: "Amazon DynamoDB#DynamoDB Thread 1",
+      };
+
+      // Mock post Request
+      nock("https://dynamodb.eu-west-1.amazonaws.com")
+        .post("/")
+        .reply(200, {
+          ConsumedCapacity: {
+            CapacityUnits: 2,
+            TableName: "test-table",
+          },
+          Attributes: undefined,
+          ItemCollectionMetrics: undefined,
+        });
+
+      // Act
+      const result = await put("cgu", "eu-west-1", {
+        TableName: "test-table",
+        Item,
+      });
+
+      // assert
+      expect(result.type).toEqual("success");
+      expect(result.data.ConsumedCapacity).toEqual(
+        expect.objectContaining({
+          CapacityUnits: 2,
+          TableName: "test-table",
+        })
+      );
+    });
+  });
+
   describe("error handling", () => {
     let result: PreloaderResponse<any>;
     beforeEach(() => {
@@ -160,17 +257,36 @@ describe("Queries", () => {
     afterEach(() => {
       // assert
       expect(result.type).toEqual("error");
+      expect(errorSpy).toHaveBeenCalled();
     });
+
     it("listTables", async () => {
       // Act
       result = await listTables("cgu", "eu-west-1");
     });
+
     it("scan", async () => {
       // Act
       result = await scan("cgu", "eu-west-1", {
         TableName: "test-table",
       });
     });
+
+    it("query", async () => {
+      // Act
+      result = await query("cgu", "eu-west-1", {
+        TableName: "test-table",
+      });
+    });
+
+    it("put", async () => {
+      // Act
+      result = await put("cgu", "eu-west-1", {
+        TableName: "test-table",
+        Item: { pk: "value" },
+      });
+    });
+
     it("describeTable", async () => {
       // Act
       result = await describeTable("cgu", "eu-west-1", "test-table");

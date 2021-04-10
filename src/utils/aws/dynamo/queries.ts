@@ -4,6 +4,7 @@ import {
   DescribeTableCommand,
   DescribeTableCommandOutput,
   DynamoDBClient,
+  DynamoDBClientConfig,
   ListTablesCommand,
   ListTablesCommandInput,
   ListTablesCommandOutput,
@@ -11,19 +12,33 @@ import {
 
 import {
   DynamoDBDocument,
+  PutCommandInput,
+  PutCommandOutput,
   ScanCommandInput,
   ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
+import { listAwsConfig } from "../accounts/config";
 
 const clientConstructor = async (profile: string, region: string) => {
-  const credentials = await fetchCredentials(profile);
+  if (!profile) throw Error("No profile provided to client");
 
-  const client = new DynamoDBClient({
+  const credentials = await fetchCredentials(profile);
+  const configurations = await listAwsConfig();
+
+  const params: DynamoDBClientConfig = {
     region,
     credentials,
     logger: console,
-  });
+  };
+
+  const endpoint = configurations.data.find(
+    (config) => config.profile === profile
+  ).endpoint;
+
+  if (endpoint) params.endpoint = endpoint;
+
+  const client = new DynamoDBClient(params);
 
   return client;
 };
@@ -71,10 +86,11 @@ export const listTables = async (
     return {
       type: "success",
       data: result,
-      message: `Fetched list of tables from dynamo with ${profile}`,
+      message: `Fetched list of tables from dynamo: ${region}`,
       details: `Table count: ${result.TableNames.length}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -105,6 +121,7 @@ export const describeTable = async (
       details: `Table item count: ${result.Table.ItemCount}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -135,10 +152,73 @@ export const scan = async (
       details: `Scan count: ${result.Count}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
       message: `Scan operation failed: ${options.TableName}`,
+      details: e.message,
+    };
+  }
+};
+
+export const query = async (
+  profile: string,
+  region: string,
+  options: ScanCommandInput
+): Promise<PreloaderResponse<ScanCommandOutput | null>> => {
+  let result;
+
+  try {
+    const client = await clientConstructor(profile, region);
+
+    const documentClient = DynamoDBDocument.from(client);
+
+    result = await documentClient.query(options);
+
+    return {
+      type: "success",
+      data: result,
+      message: `Queried table: ${options.TableName}`,
+      details: `Result count: ${result.Count}`,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      type: "error",
+      data: null,
+      message: `Query operation failed: ${options.TableName}`,
+      details: e.message,
+    };
+  }
+};
+
+export const put = async (
+  profile: string,
+  region: string,
+  options: PutCommandInput
+): Promise<PreloaderResponse<PutCommandOutput | null>> => {
+  let result;
+
+  try {
+    const client = await clientConstructor(profile, region);
+
+    const documentClient = DynamoDBDocument.from(client);
+
+    result = await documentClient.put(options);
+
+    return {
+      type: "success",
+      data: result,
+      message: `Put item in table: ${options.TableName}`,
+      details: `Consumed Capacity: ${result.ConsumedCapacity.CapacityUnits} WCU`,
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      type: "error",
+      data: null,
+      message: `Put operation failed: ${options.TableName}`,
       details: e.message,
     };
   }

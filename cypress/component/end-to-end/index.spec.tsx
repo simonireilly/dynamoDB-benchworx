@@ -35,7 +35,7 @@ describe("End to End tests", () => {
     );
   });
   it("renders the application in full", () => {
-    cy.wait(1000);
+    cy.wait(2000);
 
     cy.matchImageSnapshot("latest");
   });
