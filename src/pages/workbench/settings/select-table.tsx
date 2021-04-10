@@ -29,6 +29,7 @@ export const SelectTable = (): ReactElement => {
   >([]);
 
   const fetchTables = async () => {
+    console.info("Fetching all tables");
     const results = await listTables(credentials.profile, credentials.region);
     setNotification(results);
     if (results.type === "success") setTables(results.data.TableNames);

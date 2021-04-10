@@ -1,5 +1,5 @@
 import { mocked } from "ts-jest/utils";
-import { describeTable, listTables, scan, query } from "./queries";
+import { describeTable, listTables, scan, query, put } from "./queries";
 import nock from "nock";
 import {
   ListTablesCommandInput,
@@ -10,7 +10,8 @@ import { listAwsConfig } from "@src/utils/aws/accounts/config";
 import { describeTableResponse } from "@fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
-jest.spyOn(global.console, "info");
+const infoSpy = jest.spyOn(global.console, "info");
+const errorSpy = jest.spyOn(global.console, "error");
 
 jest.mock("@src/utils/aws/credentials");
 const mockedFetchCredentials = mocked(fetchCredentials);
@@ -208,6 +209,44 @@ describe("Queries", () => {
     });
   });
 
+  describe("put", () => {
+    it("calls scan command on the document client", async () => {
+      const Item = {
+        ReplyDateTime: "2019-10-31 11:27:17",
+        Message: "DynamoDB Thread 1 Reply 2 text",
+        PostedBy: "User B",
+        Id: "Amazon DynamoDB#DynamoDB Thread 1",
+      };
+
+      // Mock post Request
+      nock("https://dynamodb.eu-west-1.amazonaws.com")
+        .post("/")
+        .reply(200, {
+          ConsumedCapacity: {
+            CapacityUnits: 2,
+            TableName: "test-table",
+          },
+          Attributes: undefined,
+          ItemCollectionMetrics: undefined,
+        });
+
+      // Act
+      const result = await put("cgu", "eu-west-1", {
+        TableName: "test-table",
+        Item,
+      });
+
+      // assert
+      expect(result.type).toEqual("success");
+      expect(result.data.ConsumedCapacity).toEqual(
+        expect.objectContaining({
+          CapacityUnits: 2,
+          TableName: "test-table",
+        })
+      );
+    });
+  });
+
   describe("error handling", () => {
     let result: PreloaderResponse<any>;
     beforeEach(() => {
@@ -218,23 +257,36 @@ describe("Queries", () => {
     afterEach(() => {
       // assert
       expect(result.type).toEqual("error");
+      expect(errorSpy).toHaveBeenCalled();
     });
+
     it("listTables", async () => {
       // Act
       result = await listTables("cgu", "eu-west-1");
     });
+
     it("scan", async () => {
       // Act
       result = await scan("cgu", "eu-west-1", {
         TableName: "test-table",
       });
     });
+
     it("query", async () => {
       // Act
       result = await query("cgu", "eu-west-1", {
         TableName: "test-table",
       });
     });
+
+    it("put", async () => {
+      // Act
+      result = await put("cgu", "eu-west-1", {
+        TableName: "test-table",
+        Item: { pk: "value" },
+      });
+    });
+
     it("describeTable", async () => {
       // Act
       result = await describeTable("cgu", "eu-west-1", "test-table");
