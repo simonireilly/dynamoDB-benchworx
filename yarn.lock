@@ -2330,6 +2330,13 @@
   dependencies:
     "@octokit/openapi-types" "^6.0.0"
 
+"@release-it/keep-a-changelog@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@release-it/keep-a-changelog/-/keep-a-changelog-2.2.2.tgz#16896c4c25978993886fa0b0cfcbceb31c53a27d"
+  integrity sha512-fFHtjKcnxA2bE0jVBFTFSQq2U4bPqL1EhRx9kDl+fzAXqERjEazcvrrp6fk2LaVRSID4L0IPKQ4KyOBJGf0Y3g==
+  dependencies:
+    detect-newline "^3.1.0"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz#a21117b19ee9be70c379ec1877537ef2e1c63301"
@@ -5037,7 +5044,7 @@ detect-libc@^1.0.2, detect-libc@^1.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
-detect-newline@^3.0.0:
+detect-newline@^3.0.0, detect-newline@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
