@@ -16,6 +16,8 @@ Open source GUI for working with AWS DynamoDB.
     - [Assume Role in another Account](#assume-role-in-another-account)
     - [Assume Role with MFA](#assume-role-with-mfa)
     - [Local](#local)
+  - [Contributing](#contributing)
+  - [Releasing](#releasing)
 
 ## Features
 
@@ -102,3 +104,25 @@ region = local
 output = json
 endpoint=http://localhost:8000
 ```
+
+## Contributing
+
+Running the project locally by pull/forking.
+
+```
+yarn install
+
+yarn start
+```
+
+## Releasing
+
+Currently the release process is automated to produce drafts as Beta releases until a stable version is ready.
+
+The release process is.
+
+1. Create a release branch
+2. Run the release command
+   1. `yarn pub:beta`
+   2. Answer yes to all
+3. Github Actions will kick off following the creation of the tag, and binaries for the supported operating systems will be produced.
