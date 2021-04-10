@@ -1,7 +1,7 @@
 {
   "name": "BenchWorx",
   "productName": "BenchWorx",
-  "version": "v0.0.1-alpha.3",
+  "version": "0.0.1-beta.1",
   "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
@@ -13,12 +13,16 @@
     "cy:u": "cypress run --env updateSnapshots=true",
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pub:beta": "release-it --preRelease=beta --no-npm.publish"
   },
   "lint-staged": {
     "*.ts|*.tsx": "yarn lint"
   },
-  "keywords": [],
+  "keywords": [
+    "DynamoDB",
+    "GUI"
+  ],
   "author": {
     "name": "Simon Reilly",
     "email": "simon.reilly@gmail.com"
@@ -97,6 +101,7 @@
     "@electron-forge/plugin-webpack": "6.0.0-beta.54",
     "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "@release-it/keep-a-changelog": "^2.2.2",
     "@types/cypress-image-snapshot": "^3.1.5",
     "@types/jest": "^26.0.22",
     "@types/nock": "^11.1.0",
@@ -123,6 +128,7 @@
     "nock": "^13.0.11",
     "node-loader": "^1.0.1",
     "prettier": "^2.2.1",
+    "release-it": "^14.6.0",
     "style-loader": "^2.0.0",
     "ts-jest": "^26.5.4",
     "ts-loader": "^8.1.0",

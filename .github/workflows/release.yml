@@ -20,7 +20,7 @@ jobs:
       - name: Install packages
         run: yarn install
 
-      - name: publish
+      - name: On Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn pub
