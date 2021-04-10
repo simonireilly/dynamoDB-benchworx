@@ -90,6 +90,7 @@ export const listTables = async (
       details: `Table count: ${result.TableNames.length}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -120,6 +121,7 @@ export const describeTable = async (
       details: `Table item count: ${result.Table.ItemCount}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -150,6 +152,7 @@ export const scan = async (
       details: `Scan count: ${result.Count}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -180,6 +183,7 @@ export const query = async (
       details: `Result count: ${result.Count}`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,
@@ -210,6 +214,7 @@ export const put = async (
       details: `Consumed Capacity: ${result.ConsumedCapacity.CapacityUnits} WCU`,
     };
   } catch (e) {
+    console.error(e);
     return {
       type: "error",
       data: null,

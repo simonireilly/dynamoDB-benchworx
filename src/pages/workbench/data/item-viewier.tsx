@@ -1,7 +1,14 @@
-import React, { ReactElement, useContext, useState, useRef } from "react";
+import React, {
+  ReactElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Editor, { OnChange } from "@monaco-editor/react";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { Box, Toolbar, Button } from "@material-ui/core";
+import { getKeySchema } from "@src/utils/aws/dynamo/items";
 
 // TODO: Consider packaging to monaco editor instead of fetching over the network
 // as this means we can support offline (do we need to do that?)
@@ -14,13 +21,28 @@ export const ItemViewer = (): ReactElement => {
     aws: { put },
   } = useContext(ElectronStore);
 
+  // Item has same pk, sk but attrs are different
   const [changed, setChanged] = useState(false);
-  const [changedItem, setChangedItem] = useState(item);
+  // pk and sk have been changed so a new item will be created
+  const [newItem, setNewItem] = useState(false);
+  const [editorItem, setEditorItem] = useState(item);
 
+  const keySchema = useMemo(() => {
+    return table?.Table && getKeySchema(table.Table.KeySchema);
+  }, [table?.Table?.TableName]);
+
+  // TODO: These handle changes are slow and cause the editor to feel laggy
+  // Instead we should handle validation separately
+  // And handle submits by getting the current value
+  // TODO: The editor does not fire change events when the item is changed
+  // back to its original value, need to investigate why this is
   const handleEditorChange: OnChange = (value, event) => {
+    console.info("Change event");
     try {
-      setChangedItem(JSON.parse(value));
+      const currentValue = JSON.parse(value);
+      setEditorItem(currentValue);
       setChanged(true);
+      setNewItem(isNewItem(currentValue));
     } catch {
       setNotification({
         message: "Invalid JSON detected",
@@ -31,10 +53,29 @@ export const ItemViewer = (): ReactElement => {
     }
   };
 
-  const updateItem = async () => {
+  useEffect(() => {
+    setChanged(false);
+    setNewItem(false);
+  }, [JSON.stringify(item)]);
+
+  // Item is a new item if the pk or sk have been changed
+  const isNewItem = (current: Record<string, unknown>): boolean => {
+    console.info([
+      item[keySchema.hashKey],
+      current[keySchema.hashKey],
+      item[keySchema.sortKey],
+      current[keySchema.sortKey],
+    ]);
+    return (
+      item[keySchema.hashKey] !== current[keySchema.hashKey] ||
+      item[keySchema.sortKey] !== current[keySchema.sortKey]
+    );
+  };
+
+  const putItem = async () => {
     const results = await put(credentials.profile, credentials.region, {
       TableName: table.Table.TableName,
-      Item: changedItem,
+      Item: editorItem,
       ReturnConsumedCapacity: "TOTAL",
     });
     setNotification(results);
@@ -47,7 +88,7 @@ export const ItemViewer = (): ReactElement => {
           theme="vs-dark"
           defaultLanguage="json"
           value={JSON.stringify(item, null, 2)}
-          defaultValue="// None selected"
+          defaultValue="{}"
           onChange={handleEditorChange}
         />
       </Box>
@@ -56,10 +97,19 @@ export const ItemViewer = (): ReactElement => {
           <Button
             variant="contained"
             color="primary"
-            onClick={updateItem}
-            disabled={!changed}
+            onClick={putItem}
+            disabled={!changed || newItem}
           >
             Update Item
+          </Button>
+          &nbsp;
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={putItem}
+            disabled={!newItem}
+          >
+            Add New Item
           </Button>
         </Toolbar>
       </Box>

@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import { IndexDescription } from "@src/components/index-description";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { useStyles } from "@src/styles";
 import React, {
