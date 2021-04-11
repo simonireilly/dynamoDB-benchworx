@@ -3,9 +3,15 @@ import { mount } from "@cypress/react";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { UI } from "@src/layout/ui";
 import { mockAws } from "@cy/support/mocks";
+import { Box } from "@material-ui/core";
 
 describe("End to End tests", () => {
   beforeEach(() => {
+    cy.window().then((win) => {
+      win.isDeepStrictEqual = () => null;
+    });
+    cy.window().should("have.property", "isDeepStrictEqual");
+
     cy.fixture("describe-table").then((table) =>
       mount(
         <ElectronStore.Provider
@@ -29,7 +35,9 @@ describe("End to End tests", () => {
             ],
           }}
         >
-          <UI />
+          <Box p={1}>
+            <UI />
+          </Box>
         </ElectronStore.Provider>
       )
     );
