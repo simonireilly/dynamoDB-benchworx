@@ -3,3 +3,7 @@ declare module "@cypress/react/plugins/load-webpack" {
 
   export default injectDevServer;
 }
+
+interface Window {
+  isDeepStrictEqual: () => void;
+}

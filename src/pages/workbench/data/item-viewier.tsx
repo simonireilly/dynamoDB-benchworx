@@ -15,33 +15,37 @@ import { getKeySchema } from "@src/utils/aws/dynamo/items";
 export const ItemViewer = (): ReactElement => {
   const {
     item,
+    setItem,
     setNotification,
     credentials,
     table,
     aws: { put },
   } = useContext(ElectronStore);
 
+  const { isDeepStrictEqual } = window["util"] || {};
+
+  // Bind the item value to the state allowing the edit to control the state
+  const [value, setValue] = useState(item || {});
   // Item has same pk, sk but attrs are different
   const [changed, setChanged] = useState(false);
   // pk and sk have been changed so a new item will be created
   const [newItem, setNewItem] = useState(false);
-  const [editorItem, setEditorItem] = useState(item);
 
   const keySchema = useMemo(() => {
     return table?.Table && getKeySchema(table.Table.KeySchema);
   }, [table?.Table?.TableName]);
 
-  // TODO: These handle changes are slow and cause the editor to feel laggy
-  // Instead we should handle validation separately
-  // And handle submits by getting the current value
-  // TODO: The editor does not fire change events when the item is changed
-  // back to its original value, need to investigate why this is
   const handleEditorChange: OnChange = (value, event) => {
-    console.info("Change event");
     try {
       const currentValue = JSON.parse(value);
-      setEditorItem(currentValue);
-      setChanged(true);
+      setValue(currentValue);
+      // Set changed when the item is not equal to the currentValue
+      console.info({
+        item,
+        currentValue,
+      });
+
+      setChanged(!isDeepStrictEqual(item, currentValue));
       setNewItem(isNewItem(currentValue));
     } catch {
       setNotification({
@@ -56,16 +60,14 @@ export const ItemViewer = (): ReactElement => {
   useEffect(() => {
     setChanged(false);
     setNewItem(false);
+    setValue(item);
   }, [JSON.stringify(item)]);
 
-  // Item is a new item if the pk or sk have been changed
+  // Item is a new item if the pk or sk have been changed, or item is not in context
+  // so this is a new blank entry
   const isNewItem = (current: Record<string, unknown>): boolean => {
-    console.info([
-      item[keySchema.hashKey],
-      current[keySchema.hashKey],
-      item[keySchema.sortKey],
-      current[keySchema.sortKey],
-    ]);
+    if (!item) return true;
+
     return (
       item[keySchema.hashKey] !== current[keySchema.hashKey] ||
       item[keySchema.sortKey] !== current[keySchema.sortKey]
@@ -73,12 +75,19 @@ export const ItemViewer = (): ReactElement => {
   };
 
   const putItem = async () => {
-    const results = await put(credentials.profile, credentials.region, {
-      TableName: table.Table.TableName,
-      Item: editorItem,
+    const results = await put(credentials?.profile, credentials?.region, {
+      TableName: table?.Table?.TableName,
+      Item: value,
       ReturnConsumedCapacity: "TOTAL",
     });
+
     setNotification(results);
+
+    if (results.type === "success") {
+      setChanged(false);
+      setNewItem(false);
+      setItem(value);
+    }
   };
 
   return (
@@ -87,7 +96,7 @@ export const ItemViewer = (): ReactElement => {
         <Editor
           theme="vs-dark"
           defaultLanguage="json"
-          value={JSON.stringify(item, null, 2)}
+          value={JSON.stringify(value, null, 2)}
           defaultValue="{}"
           onChange={handleEditorChange}
         />

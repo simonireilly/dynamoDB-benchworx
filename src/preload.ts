@@ -9,6 +9,7 @@
 console.info("Preloading node modules");
 
 import { contextBridge } from "electron";
+import { isDeepStrictEqual } from "util";
 
 import {
   describeTable,
@@ -31,6 +32,9 @@ declare global {
       query: typeof query;
       put: typeof put;
     };
+    util: {
+      isDeepStrictEqual: typeof isDeepStrictEqual;
+    };
   }
 }
 
@@ -52,4 +56,8 @@ contextBridge.exposeInMainWorld("aws", {
   scan,
   query,
   put,
+});
+
+contextBridge.exposeInMainWorld("util", {
+  isDeepStrictEqual,
 });

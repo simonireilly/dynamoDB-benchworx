@@ -63,13 +63,14 @@ export const DataTable = (): ReactElement => {
         return {
           // TODO: Having to assign ID here is not ideal, we would be better to have a unique key that is not part of the item
           // For this reason we should move away from material UI DataGrid
+          // This causes the table not to update as it is using this field as the key for the table. It would be better to just
+          // put in a uuid at this point
           id: constructCompositeKey(row),
           ...row,
         };
       }),
     [sortKey, hashKey, items.length]
   );
-  console.info("RowData", { rowData });
 
   const handleRowSelection = (params: GridRowSelectedParams) => {
     const { data } = params;
