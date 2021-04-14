@@ -35,13 +35,9 @@ export const Profile = (): ReactElement => {
 
   useEffect(() => {
     const setup = async () => {
-      try {
-        const configuration = await listAwsConfig();
-        setConfig(configuration.data);
-        setNotification(configuration);
-      } catch (e) {
-        console.error(e);
-      }
+      const configuration = await listAwsConfig();
+      setConfig(configuration.data);
+      setNotification(configuration);
     };
 
     setup();

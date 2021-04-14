@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/extend-expect";
 
 import React, { FC, ReactChildren, ReactElement } from "react";
 import { render, RenderOptions } from "@testing-library/react";
-import { ElectronStore } from "@src/contexts/electron-context";
+import { ElectronContext, ElectronStore } from "@src/contexts/electron-context";
 import { mocked } from "ts-jest/utils";
 import {
   describeTable,
@@ -68,5 +68,51 @@ export const setup = (
   options?: Omit<RenderOptions, "queries">
 ): { awsMock: typeof awsMock; render: () => ReturnType<typeof render> } => ({
   awsMock,
-  render: () => render(ui, { wrapper: WrappedComponent, ...options }),
+  render: () =>
+    render(ui, {
+      wrapper: WrappedComponent,
+      ...options,
+    }),
 });
+
+export const customRender = (
+  ui: ReactElement,
+  {
+    providerProps = { value: {} },
+    ...renderOptions
+  }: { providerProps?: { value: Partial<ElectronContext> } } & Omit<
+    RenderOptions,
+    "queries"
+  >
+): ReturnType<typeof render> => {
+  const props = {
+    value: {
+      table: {
+        $metadata: {},
+      },
+      aws: awsMock,
+      credentials: {
+        profile: "default",
+        region: "eu-west-1",
+        expiration: new Date(1995, 11, 17, 3, 24, 0),
+      },
+      setNotification: () => ({}),
+      item: {
+        pk: "test",
+        sk: "example",
+      },
+      items: [
+        {
+          pk: "test",
+          sk: "example",
+        },
+      ],
+      ...(providerProps && providerProps.value),
+    },
+  };
+
+  return render(
+    <ElectronStore.Provider {...props}>{ui}</ElectronStore.Provider>,
+    renderOptions
+  );
+};
