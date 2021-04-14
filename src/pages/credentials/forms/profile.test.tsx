@@ -4,18 +4,39 @@
 
 import React from "react";
 import { Profile } from "./profile";
-import { mount } from "enzyme";
-import { mockAws } from "@mocks/index";
+import { render, fireEvent, screen } from "@testing-library/react";
 import { ElectronStore } from "@src/contexts/electron-context";
+import { mocked } from "ts-jest/utils";
+import {
+  describeTable,
+  listTables,
+  put,
+  query,
+  scan,
+} from "@src/utils/aws/dynamo/queries";
+import { listAwsConfig } from "@src/utils/aws/accounts/config";
+import { authenticator } from "@src/utils/aws/credentials";
+
+const listAwsConfigMock = mocked(listAwsConfig);
+
+const awsMock: Window["aws"] = {
+  scan: mocked(scan),
+  query: mocked(query),
+  listAwsConfig: listAwsConfigMock,
+  listTables: mocked(listTables),
+  authenticator: mocked(authenticator),
+  put: mocked(put),
+  describeTable: mocked(describeTable),
+};
 
 const setup = () => {
-  return mount(
+  return render(
     <ElectronStore.Provider
       value={{
         table: {
           $metadata: {},
         },
-        aws: mockAws,
+        aws: awsMock,
         credentials: {
           profile: "default",
           region: "eu-west-1",
@@ -39,9 +60,11 @@ const setup = () => {
 };
 
 describe("Profile", () => {
-  it("renders the component", () => {
-    const component = setup();
+  it("renders the component with available profiles", async () => {
+    setup();
 
-    expect(component).toMatchSnapshot();
+    const alert = await screen.findByRole("alert");
+
+    expect(alert).toHaveTextContent(/congrats/i);
   });
 });

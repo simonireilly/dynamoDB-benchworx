@@ -1,4 +1,5 @@
 const { resolve } = require("path");
+require("@testing-library/jest-dom");
 
 module.exports = {
   preset: "ts-jest",

@@ -1,3 +1,6 @@
+import { scan } from "@src/utils/aws/dynamo/queries";
+import { mocked } from "ts-jest/utils";
+
 export const mockAws: Window["aws"] = {
   listTables: (profile: string, mfaCode?: string) =>
     Promise.resolve({
@@ -24,24 +27,5 @@ export const mockAws: Window["aws"] = {
       ],
       details: null,
     }),
-  scan: async (profile: string, region: string, options) => {
-    return {
-      data: {
-        $metadata: {},
-        Count: 2,
-        ScannedCount: 2,
-        ConsumedCapacity: 2,
-        LastEvaluatedKey: null,
-        Items: [...Array.from({ length: 100 }, (x, i) => ++i)].map(
-          (key: number) => ({
-            pk: `user-${key}`,
-            sk: new Date(Date.now()),
-          })
-        ),
-      },
-      details: null,
-      message: "",
-      type: "success",
-    };
-  },
+  scan: mocked(scan),
 };

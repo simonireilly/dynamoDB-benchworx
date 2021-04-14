@@ -11,6 +11,7 @@ import { describeTableResponse } from "@fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
 const errorSpy = jest.spyOn(global.console, "error");
+jest.spyOn(global.console, "info");
 
 jest.mock("@src/utils/aws/credentials");
 const mockedFetchCredentials = mocked(fetchCredentials);
