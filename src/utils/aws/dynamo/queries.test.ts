@@ -10,7 +10,6 @@ import { listAwsConfig } from "@src/utils/aws/accounts/config";
 import { describeTableResponse } from "@fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
-const infoSpy = jest.spyOn(global.console, "info");
 const errorSpy = jest.spyOn(global.console, "error");
 
 jest.mock("@src/utils/aws/credentials");

@@ -8,6 +8,7 @@ type Props = {
   mfaCode: string;
 };
 
+// TODO: clearCredentials: () => void should dump the in memory cache
 const inMemoryCache: {
   [key: string]: Credentials;
 } = {};
@@ -15,7 +16,7 @@ const inMemoryCache: {
 export const authenticator = async ({
   profile,
   mfaCode,
-}: Props): Promise<PreloaderResponse<void>> => {
+}: Props): Promise<PreloaderResponse<Pick<Credentials, "expiration">>> => {
   const credentials = fromIni({
     profile,
     roleAssumer,
@@ -25,13 +26,15 @@ export const authenticator = async ({
   });
 
   try {
-    inMemoryCache[profile] = await credentials();
+    const authenticatedCredentials = await credentials();
+
+    inMemoryCache[profile] = authenticatedCredentials;
 
     return {
       type: "success",
       message: `Authenticated for ${profile}`,
       details: null,
-      data: null,
+      data: { expiration: authenticatedCredentials.expiration },
     };
   } catch (e) {
     return {

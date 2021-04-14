@@ -1,4 +1,4 @@
-import { AppBar, Box, Button } from "@material-ui/core";
+import { AppBar, Avatar, Box, Button, Chip } from "@material-ui/core";
 import React, { ReactElement, useContext } from "react";
 import { Profile } from "@src/pages/credentials/forms/profile";
 import { Region } from "@src/pages/credentials/forms/region";
@@ -6,7 +6,8 @@ import { ElectronStore } from "@src/contexts/electron-context";
 import { SelectTable } from "@src/pages/workbench/settings/select-table";
 
 export const Header = (): ReactElement => {
-  const { clearCredentials } = useContext(ElectronStore);
+  const { credentials, clearCredentials } = useContext(ElectronStore);
+  console.info(credentials);
   return (
     <AppBar position="static" color="default">
       <Box
@@ -19,6 +20,7 @@ export const Header = (): ReactElement => {
           <SelectTable />
         </Box>
         <Box display="flex" alignItems="center">
+          {credentials && <Chip size="small" label="Session:" />}
           <Region />
           <Profile />
           <Button

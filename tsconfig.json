@@ -24,6 +24,9 @@
       "@fixtures/*": [
         "./__tests__/fixtures/*"
       ],
+      "@mocks/*": [
+        "./__tests__/mocks/*"
+      ],
       "@cy/*": [
         "./cypress/*"
       ],
