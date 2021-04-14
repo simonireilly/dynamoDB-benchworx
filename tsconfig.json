@@ -15,17 +15,15 @@
       "node",
       "jest",
       "nock",
-      "@aws-sdk/types"
+      "@aws-sdk/types",
+      "testing-library__jest-dom"
     ],
     "paths": {
       "@src/*": [
         "./src/*"
       ],
-      "@fixtures/*": [
-        "./__tests__/fixtures/*"
-      ],
-      "@mocks/*": [
-        "./__tests__/mocks/*"
+      "@tests/*": [
+        "./__tests__/*"
       ],
       "@cy/*": [
         "./cypress/*"
@@ -37,7 +35,7 @@
   },
   "include": [
     "src/**/*",
-    "__tests__/fixtures/**/*",
+    "__tests__/**/*",
     "cypress/**/*"
   ],
   "exclude": [

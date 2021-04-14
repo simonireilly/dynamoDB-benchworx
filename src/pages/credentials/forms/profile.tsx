@@ -148,7 +148,7 @@ export const Profile = (): ReactElement => {
         </Card>
       </Backdrop>
       <FormControl
-        data-test="select-profile"
+        data-testid="select-profile"
         variant="outlined"
         className={classes.formControl}
         margin="dense"
@@ -163,6 +163,7 @@ export const Profile = (): ReactElement => {
           }}
           margin="dense"
           variant="outlined"
+          data-testid="select-profile-options"
         >
           {config &&
             config.map(({ profile, assumeRole, mfa }) => (

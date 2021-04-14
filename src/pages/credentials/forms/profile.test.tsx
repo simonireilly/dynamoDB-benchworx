@@ -4,67 +4,46 @@
 
 import React from "react";
 import { Profile } from "./profile";
-import { render, fireEvent, screen } from "@testing-library/react";
-import { ElectronStore } from "@src/contexts/electron-context";
-import { mocked } from "ts-jest/utils";
-import {
-  describeTable,
-  listTables,
-  put,
-  query,
-  scan,
-} from "@src/utils/aws/dynamo/queries";
-import { listAwsConfig } from "@src/utils/aws/accounts/config";
-import { authenticator } from "@src/utils/aws/credentials";
+import { screen, cleanup } from "@testing-library/react";
+import { setup } from "@tests/utils/renderer";
 
-const listAwsConfigMock = mocked(listAwsConfig);
-
-const awsMock: Window["aws"] = {
-  scan: mocked(scan),
-  query: mocked(query),
-  listAwsConfig: listAwsConfigMock,
-  listTables: mocked(listTables),
-  authenticator: mocked(authenticator),
-  put: mocked(put),
-  describeTable: mocked(describeTable),
-};
-
-const setup = () => {
-  return render(
-    <ElectronStore.Provider
-      value={{
-        table: {
-          $metadata: {},
-        },
-        aws: awsMock,
-        credentials: {
-          profile: "default",
-          region: "eu-west-1",
-        },
-        setNotification: () => ({}),
-        item: {
-          pk: "test",
-          sk: "example",
-        },
-        items: [
-          {
-            pk: "test",
-            sk: "example",
-          },
-        ],
-      }}
-    >
-      <Profile />
-    </ElectronStore.Provider>
-  );
-};
+afterEach(() => {
+  cleanup;
+});
 
 describe("Profile", () => {
   it("renders the component with available profiles", async () => {
-    setup();
+    const { awsMock, render } = setup(<Profile />);
 
-    const alert = await screen.findByRole("alert");
+    awsMock.listAwsConfig.mockResolvedValueOnce({
+      data: [
+        {
+          region: "eu-west-1",
+          mfa: false,
+          profile: "profile-1",
+          assumeRole: false,
+        },
+        {
+          region: "eu-west-1",
+          mfa: false,
+          profile: "profile-2",
+          assumeRole: false,
+        },
+      ],
+      details: "Fetched a profile",
+      type: "success",
+      message: "Fetched profiles message",
+    });
 
-    expect(alert).toHaveTextContent(/congrats/i);
+    render();
+
+    const profileSelect = await screen.findByTestId("select-profile");
+    const profileSelectOptions = await screen.findByTestId(
+      "select-profile-options"
+    );
+
+    expect(awsMock.listAwsConfig).toHaveBeenCalled();
+    expect(profileSelect).toHaveTextContent("profile");
+    expect(profileSelectOptions).toHaveTextContent("profile-1profile-2");
   });
 });

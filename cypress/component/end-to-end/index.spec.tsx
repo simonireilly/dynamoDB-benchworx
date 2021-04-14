@@ -21,6 +21,7 @@ describe("End to End tests", () => {
             credentials: {
               profile: "default",
               region: "eu-west-1",
+              expiration: new Date(1995, 11, 17, 3, 24, 0),
             },
             setNotification: () => ({}),
             item: {

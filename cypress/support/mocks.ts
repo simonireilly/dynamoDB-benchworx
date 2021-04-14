@@ -1,1 +1,1 @@
-export { mockAws } from "@mocks/index";
+export { mockAws } from "@tests/mocks/index";
