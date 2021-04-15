@@ -10,6 +10,11 @@ describe("End to End tests", () => {
     cy.window().then((win) => {
       win.isDeepStrictEqual = () => null;
     });
+
+    // Freeze cypress time
+    const now = new Date(1995, 11, 17, 3, 22, 0).getTime();
+    cy.clock(now);
+
     cy.window().should("have.property", "isDeepStrictEqual");
 
     cy.fixture("describe-table").then((table) =>

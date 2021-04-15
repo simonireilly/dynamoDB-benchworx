@@ -49,7 +49,17 @@ export const Profile = (): ReactElement => {
         profile: credentials.profile,
         mfaCode: credentials.mfaCode,
       });
+
       setNotification(response);
+
+      if (response.type === "success" && response.data?.expiration) {
+        setCredentials((current) => ({
+          ...current,
+          ...{
+            expiration: response.data?.expiration,
+          },
+        }));
+      }
     }
   };
 
