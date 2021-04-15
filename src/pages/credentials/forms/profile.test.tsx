@@ -105,6 +105,7 @@ describe("Profile", () => {
         profile: "profile-1",
         mfaCode: "",
       });
+      expect(setCredentialsMock).toHaveBeenCalledTimes(1);
     });
 
     it("sets the expiration when returned by the authenticator", async () => {
@@ -138,6 +139,7 @@ describe("Profile", () => {
         profile: "profile-1",
         mfaCode: "",
       });
+      expect(setCredentialsMock).toHaveBeenCalledTimes(1);
     });
   });
 });
