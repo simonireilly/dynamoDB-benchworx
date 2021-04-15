@@ -81,7 +81,16 @@ export const Profile = (): ReactElement => {
     setOpen(mfaIsRequired);
 
     if (!mfaIsRequired) {
-      await authenticator({ profile, mfaCode: "" });
+      const response = await authenticator({ profile, mfaCode: "" });
+
+      if (response.type === "success" && response.data?.expiration) {
+        setCredentials((current) => ({
+          ...current,
+          ...{
+            expiration: response.data?.expiration,
+          },
+        }));
+      }
     }
   };
 
@@ -97,7 +106,12 @@ export const Profile = (): ReactElement => {
     <div>
       <Backdrop className={classes.backdrop} open={open}>
         <Card>
-          <Box p={4} display="flex" flexDirection="column">
+          <Box
+            p={4}
+            display="flex"
+            flexDirection="column"
+            data-testid="mfa-modal"
+          >
             <form onSubmit={handleMfaSubmit}>
               <Typography>
                 Multi-Factor Authentication is required for this account.
@@ -156,6 +170,7 @@ export const Profile = (): ReactElement => {
           inputProps={{
             name: "Choose AWS Account Profile",
             id: "aws-select-profile",
+            variant: "outlined",
           }}
           margin="dense"
           variant="outlined"

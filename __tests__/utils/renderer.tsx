@@ -65,11 +65,14 @@ const WrappedComponent: FC = ({ children }: { children: ReactChildren }) => {
 
 export const setup = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, "queries">
+  options?: { providerProps?: { value: Partial<ElectronContext> } } & Omit<
+    RenderOptions,
+    "queries"
+  >
 ): { awsMock: typeof awsMock; render: () => ReturnType<typeof render> } => ({
   awsMock,
   render: () =>
-    render(ui, {
+    customRender(ui, {
       wrapper: WrappedComponent,
       ...options,
     }),
