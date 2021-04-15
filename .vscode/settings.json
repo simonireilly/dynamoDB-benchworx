@@ -7,6 +7,7 @@
     "Multifactor",
     "Worx",
     "dependabot",
-    "preload"
+    "preload",
+    "testid"
   ]
 }

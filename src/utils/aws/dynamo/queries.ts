@@ -14,6 +14,7 @@ import {
   DynamoDBDocument,
   PutCommandInput,
   PutCommandOutput,
+  QueryCommandInput,
   ScanCommandInput,
   ScanCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
@@ -165,7 +166,7 @@ export const scan = async (
 export const query = async (
   profile: string,
   region: string,
-  options: ScanCommandInput
+  options: QueryCommandInput
 ): Promise<PreloaderResponse<ScanCommandOutput | null>> => {
   let result;
 

@@ -4,9 +4,11 @@ import { Profile } from "@src/pages/credentials/forms/profile";
 import { Region } from "@src/pages/credentials/forms/region";
 import { ElectronStore } from "@src/contexts/electron-context";
 import { SelectTable } from "@src/pages/workbench/settings/select-table";
+import { Expiration } from "@src/pages/credentials/stats/expiration";
 
 export const Header = (): ReactElement => {
   const { clearCredentials } = useContext(ElectronStore);
+
   return (
     <AppBar position="static" color="default">
       <Box
@@ -19,6 +21,9 @@ export const Header = (): ReactElement => {
           <SelectTable />
         </Box>
         <Box display="flex" alignItems="center">
+          <Box p={1}>
+            <Expiration />
+          </Box>
           <Region />
           <Profile />
           <Button

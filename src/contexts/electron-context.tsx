@@ -29,6 +29,7 @@ export type Credentials = {
   awsRoleArn?: string;
   sessionToken?: string;
   mfaCode?: string;
+  expiration?: Date;
 };
 
 export type ElectronContext = {

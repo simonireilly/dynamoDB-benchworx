@@ -7,11 +7,11 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { fetchCredentials } from "@src/utils/aws/credentials";
 import { listAwsConfig } from "@src/utils/aws/accounts/config";
-import { describeTableResponse } from "@fixtures/index";
+import { describeTableResponse } from "@tests/fixtures/index";
 import { PreloaderResponse } from "@src/preload";
 
-const infoSpy = jest.spyOn(global.console, "info");
 const errorSpy = jest.spyOn(global.console, "error");
+jest.spyOn(global.console, "info");
 
 jest.mock("@src/utils/aws/credentials");
 const mockedFetchCredentials = mocked(fetchCredentials);

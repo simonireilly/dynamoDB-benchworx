@@ -1,7 +1,9 @@
 name: Lint/Test/Build
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -42,7 +44,7 @@ jobs:
 
             | Previous UI | Current UI |
             | ----------- | ---------- |
-            | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/main/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ github.sha }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) |
+            | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ github.event.pull_request.base.sha }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) | ![Current snapshot](https://raw.githubusercontent.com/simonireilly/dynamoDB-benchworx/${{ github.sha }}/cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png) |
 
             Changes to the UI that are applicable after this merge request.
 

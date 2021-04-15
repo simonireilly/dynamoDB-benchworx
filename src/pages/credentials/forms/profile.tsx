@@ -35,24 +35,32 @@ export const Profile = (): ReactElement => {
 
   useEffect(() => {
     const setup = async () => {
-      try {
-        const configuration = await listAwsConfig();
-        setConfig(configuration.data);
-        setNotification(configuration);
-      } catch (e) {
-        console.error(e);
-      }
+      const configuration = await listAwsConfig();
+      setConfig(configuration.data);
+      setNotification(configuration);
     };
 
     setup();
   }, []);
 
   const auth = async () => {
-    if (mfaRequire && credentials.mfaCode.length === 6)
-      await authenticator({
+    if (mfaRequire && credentials.mfaCode.length === 6) {
+      const response = await authenticator({
         profile: credentials.profile,
         mfaCode: credentials.mfaCode,
       });
+
+      setNotification(response);
+
+      if (response.type === "success" && response.data?.expiration) {
+        setCredentials((current) => ({
+          ...current,
+          ...{
+            expiration: response.data?.expiration,
+          },
+        }));
+      }
+    }
   };
 
   useEffect(() => {
@@ -83,7 +91,16 @@ export const Profile = (): ReactElement => {
     setOpen(mfaIsRequired);
 
     if (!mfaIsRequired) {
-      await authenticator({ profile, mfaCode: "" });
+      const response = await authenticator({ profile, mfaCode: "" });
+
+      if (response.type === "success" && response.data?.expiration) {
+        setCredentials((current) => ({
+          ...current,
+          ...{
+            expiration: response.data?.expiration,
+          },
+        }));
+      }
     }
   };
 
@@ -99,7 +116,12 @@ export const Profile = (): ReactElement => {
     <div>
       <Backdrop className={classes.backdrop} open={open}>
         <Card>
-          <Box p={4} display="flex" flexDirection="column">
+          <Box
+            p={4}
+            display="flex"
+            flexDirection="column"
+            data-testid="mfa-modal"
+          >
             <form onSubmit={handleMfaSubmit}>
               <Typography>
                 Multi-Factor Authentication is required for this account.
@@ -146,7 +168,7 @@ export const Profile = (): ReactElement => {
         </Card>
       </Backdrop>
       <FormControl
-        data-test="select-profile"
+        data-testid="select-profile"
         variant="outlined"
         className={classes.formControl}
         margin="dense"
@@ -158,9 +180,11 @@ export const Profile = (): ReactElement => {
           inputProps={{
             name: "Choose AWS Account Profile",
             id: "aws-select-profile",
+            variant: "outlined",
           }}
           margin="dense"
           variant="outlined"
+          data-testid="select-profile-options"
         >
           {config &&
             config.map(({ profile, assumeRole, mfa }) => (
