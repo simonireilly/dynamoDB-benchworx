@@ -1,3 +1,5 @@
+import { PutCommandInput, QueryCommandInput } from "@aws-sdk/lib-dynamodb";
+
 export const mockAws: Window["aws"] = {
   listTables: (profile: string, mfaCode?: string) =>
     Promise.resolve({
@@ -44,4 +46,48 @@ export const mockAws: Window["aws"] = {
       type: "success",
     };
   },
+  authenticator: async ({
+    profile,
+    mfaCode,
+  }: {
+    profile: string;
+    mfaCode: string;
+  }) => ({
+    data: { expiration: new Date() },
+    type: "success",
+    message: "Authenticated",
+    details: "",
+  }),
+  describeTable: async (
+    profile: string,
+    region: string,
+    TableName: string
+  ) => ({
+    data: {
+      $metadata: {},
+    },
+    details: "",
+    message: "",
+    type: "success",
+  }),
+  put: async (profile: string, region: string, options: PutCommandInput) => ({
+    data: {
+      $metadata: {},
+    },
+    details: "",
+    message: "",
+    type: "success",
+  }),
+  query: async (
+    profile: string,
+    region: string,
+    options: QueryCommandInput
+  ) => ({
+    data: {
+      $metadata: {},
+    },
+    details: "",
+    message: "",
+    type: "success",
+  }),
 };
