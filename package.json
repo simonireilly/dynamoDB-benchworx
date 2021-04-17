@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "test": "jest",
-    "cy": "cypress run",
+    "cy": "cypress run-ct",
     "cy:u": "cypress run --env updateSnapshots=true",
     "pub": "electron-forge publish",
     "lint": "eslint --ext .ts --ext .tsx .",
@@ -93,8 +93,8 @@
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.2",
-    "@cypress/react": "^4.16.4",
-    "@cypress/webpack-dev-server": "^1.1.0",
+    "@cypress/react": "^5.3.3",
+    "@cypress/webpack-dev-server": "^1.1.3",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
@@ -139,7 +139,8 @@
     "ts-jest": "^26.5.5",
     "ts-loader": "^8.1.0",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.12.0",

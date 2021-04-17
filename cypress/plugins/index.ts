@@ -1,4 +1,4 @@
-import injectDevServer from "@cypress/react/plugins/load-webpack";
+import injectWebpackDevServer from "@cypress/react/plugins/load-webpack";
 import { addMatchImageSnapshotPlugin } from "cypress-image-snapshot/plugin";
 
 /// <reference types="cypress" />
@@ -23,9 +23,12 @@ module.exports = (
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions
 ) => {
+  console.info({ config });
   config.env.webpackFilename = "./webpack.main.config.js";
 
-  injectDevServer(on, config);
+  injectWebpackDevServer(on, config, {
+    webpackFilename: "./webpack.main.config.js",
+  });
   addMatchImageSnapshotPlugin(on, config);
 
   return config;

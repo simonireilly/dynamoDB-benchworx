@@ -1,5 +1,9 @@
 declare module "@cypress/react/plugins/load-webpack" {
-  const injectDevServer: Cypress.PluginConfig;
+  const injectDevServer: (
+    on: Cypress.PluginEvents,
+    config: Cypress.PluginConfigOptions,
+    options: { webpackFilename: string }
+  ) => Cypress.PluginConfigOptions;
 
   export default injectDevServer;
 }
