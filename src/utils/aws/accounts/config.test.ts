@@ -26,6 +26,14 @@ const fixture = {
       region: "local",
       endpoint: "http://localhost:1234",
     },
+    sso_admin: {
+      sso_start_url: "https://sso.awsapps.com/start",
+      sso_region: "eu-west-1",
+      sso_account_id: "1123456789",
+      sso_role_name: "AWSAdministratorAccess",
+      region: "us-east-1",
+      output: "json",
+    },
   },
   credentialsFile: {
     simpleProfile: {
@@ -73,7 +81,7 @@ describe("listAwsConfig", () => {
         }),
       ])
     );
-    expect(results.data.length).toEqual(5);
+    expect(results.data.length).toEqual(6);
     expect(results.type).toEqual("success");
     expect(results.data).toMatchSnapshot();
   });

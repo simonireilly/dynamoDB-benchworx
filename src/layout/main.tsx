@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 
 import { DataTable } from "@src/pages/workbench/data/data-table";
-import { Box, Button, Paper, Toolbar } from "@material-ui/core";
+import { Box, Paper } from "@material-ui/core";
 import { QueryPlanner } from "@src/pages/workbench/settings/query-planner";
 import { ItemViewer } from "@src/pages/workbench/data/item-viewier";
 

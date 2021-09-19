@@ -1,7 +1,7 @@
-import { fromIni } from "@aws-sdk/credential-provider-ini";
 import { roleAssumer } from "@src/utils/aws/credentials/role-assumer";
 import { Credentials } from "@aws-sdk/types";
 import { PreloaderResponse } from "@src/preload";
+import { defaultProvider } from "@aws-sdk/credential-provider-node";
 
 type Props = {
   profile: string;
@@ -17,7 +17,7 @@ export const authenticator = async ({
   profile,
   mfaCode,
 }: Props): Promise<PreloaderResponse<Pick<Credentials, "expiration">>> => {
-  const credentials = fromIni({
+  const credentials = defaultProvider({
     profile,
     roleAssumer,
     mfaCodeProvider: (mfaSerial: string): Promise<string> => {

@@ -4,7 +4,7 @@ Open source GUI for working with AWS DynamoDB.
 
 - 👍 Built on Electron for cross platform access
 - 🚀 Uses the aws-sdk v3 to have a small footprint
-- ✔️ Exposes multiple ways to configure aws
+- ✔️ Exposes multiple ways to configure aws authentication.
 
 ![User interface with tables and items](cypress/snapshots/end-to-end/index.spec.tsx/latest.snap.png)
 
@@ -15,12 +15,8 @@ Open source GUI for working with AWS DynamoDB.
     - [MFA Profile](#mfa-profile)
     - [Assume Role in another Account](#assume-role-in-another-account)
     - [Assume Role with MFA](#assume-role-with-mfa)
+    - [Single Sign On](#single-sign-on)
     - [Local](#local)
-  - [Contributing](#contributing)
-    - [Local Run](#local-run)
-    - [Tests](#tests)
-    - [End to End testing](#end-to-end-testing)
-  - [Releasing](#releasing)
 
 ## Features
 
@@ -40,7 +36,7 @@ Here are some examples:
 
 ### Standard Profile
 
-```
+```ini
 ~/.aws/credentials
 [profile-name]
 aws_access_key_id = id
@@ -49,14 +45,14 @@ aws_secret_access_key = secret
 
 ### MFA Profile
 
-```
+```ini
 ~/.aws/credentials
 [profile-name]
 aws_access_key_id = id
 aws_secret_access_key = secret
 ```
 
-```
+```ini
 ~/.aws/config
 [profile mfa-profile]
 mfa_serial = arn:aws:iam::<aws_account_arn>:mfa/<username>
@@ -65,14 +61,14 @@ source_profile = profile-name
 
 ### Assume Role in another Account
 
-```
+```ini
 ~/.aws/credentials
 [profile-name]
 aws_access_key_id = id
 aws_secret_access_key = secret
 ```
 
-```
+```ini
 ~/.aws/config
 [profile assumed-role]
 role_arn = arn:aws:iam::<aws_target_account_arn>:role/<RoleName>
@@ -81,14 +77,14 @@ source_profile = profile-name
 
 ### Assume Role with MFA
 
-```
+```ini
 ~/.aws/credentials
 [profile-name]
 aws_access_key_id = id
 aws_secret_access_key = secret
 ```
 
-```
+```ini
 ~/.aws/config
 [profile mfa-assumed-role]
 mfa_serial = arn:aws:iam::<aws_account_arn>:mfa/<username>
@@ -96,11 +92,30 @@ role_arn = arn:aws:iam::<aws_target_account_arn>:role/<RoleName>
 source_profile = profile-name
 ```
 
+### Single Sign On
+
+Single sign-on is not yet redirecting to the sign on page; so to begin the journey, you need to use aws cli to single sign on.
+
+```bash
+aws sso login --profile sso-admin
+```
+
+```ini
+~/.aws/config
+[profile sso-admin]
+sso_start_url = https://sso.awsapps.com/start
+sso_region = eu-west-1
+sso_account_id = 1123456789
+sso_role_name = AWSAdministratorAccess
+region = us-east-1
+output = json
+```
+
 ### Local
 
 Setup a local dynamoDB agent on a specified port.
 
-```
+```ini
 ~/.aws/config
 [profile local]
 region = local
@@ -108,49 +123,3 @@ output = json
 endpoint=http://localhost:8000
 ```
 
-## Contributing
-
-### Local Run
-
-Running the project locally by pull/forking:
-
-```
-yarn install
-
-yarn start
-```
-
-### Tests
-
-jest is the test runner used for unit testing:
-
-```
-yarn test
-
-```
-
-### End to End testing
-
-Cypress is used for end to end testing using component mounting:
-
-```
-yarn cy
-```
-
-To update failing snapshots run:
-
-```
-yarn cy:u
-```
-
-## Releasing
-
-Currently the release process is automated to produce drafts as Beta releases until a stable version is ready.
-
-The release process is.
-
-1. Create a release branch
-2. Run the release command
-   1. `yarn pub:beta`
-   2. Answer yes to all
-3. Github Actions will kick off following the creation of the tag, and binaries for the supported operating systems will be produced.

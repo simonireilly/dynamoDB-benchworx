@@ -2,7 +2,7 @@
   "name": "BenchWorx",
   "productName": "BenchWorx",
   "version": "0.0.1-beta.1",
-  "description": "Desktop client for DynamoDB that supports Credential, and MFA Role assumption",
+  "description": "Desktop client for DynamoDB that supports Credentials, SSO, and MFA Role assumption",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -25,7 +25,7 @@
   ],
   "author": {
     "name": "Simon Reilly",
-    "email": "simon.reilly@gmail.com"
+    "email": "simonireilly@gmail.com"
   },
   "license": "MIT",
   "config": {
