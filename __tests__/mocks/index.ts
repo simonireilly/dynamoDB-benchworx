@@ -22,6 +22,7 @@ export const mockAws: Window["aws"] = {
           region: "eu-west-1",
           mfa: false,
           assumeRole: false,
+          sso: true,
         },
       ],
       details: null,
