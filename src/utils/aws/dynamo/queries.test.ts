@@ -32,7 +32,13 @@ describe("Queries", () => {
     mockedListAwsConfig.mockResolvedValueOnce({
       type: "success",
       data: [
-        { profile: "cgu", mfa: false, assumeRole: false, region: "eu-west-1" },
+        {
+          profile: "cgu",
+          mfa: false,
+          assumeRole: false,
+          region: "eu-west-1",
+          sso: false,
+        },
       ],
       message: null,
       details: null,
