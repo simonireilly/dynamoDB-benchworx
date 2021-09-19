@@ -7,6 +7,7 @@ All contributions, issues, and pull requests are welcome.
     - [Tests](#tests)
     - [End to End testing](#end-to-end-testing)
   - [Releasing](#releasing)
+    - [Example](#example)
 
 ### Local Run
 
@@ -52,3 +53,11 @@ The release process is.
    1. `yarn pub:beta`
    2. Answer yes to all
 3. Github Actions will kick off following the creation of the tag, and binaries for the supported operating systems will be produced.
+
+### Example
+
+```
+get checkout -b release/0.0.x
+git push --set-upstream origin
+yarn pub:beta
+```
