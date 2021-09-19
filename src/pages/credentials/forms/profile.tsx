@@ -79,6 +79,10 @@ export const Profile = (): ReactElement => {
       (collection) => collection.profile === profile
     ).mfa;
 
+    const isSingleSignOn = config.find(
+      (collection) => collection.profile === profile
+    ).sso;
+
     setCredentials((current) => ({
       ...current,
       ...{
@@ -92,6 +96,8 @@ export const Profile = (): ReactElement => {
 
     if (!mfaIsRequired) {
       const response = await authenticator({ profile, mfaCode: "" });
+
+      setNotification(response);
 
       if (response.type === "success" && response.data?.expiration) {
         setCredentials((current) => ({

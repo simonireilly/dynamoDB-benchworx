@@ -7,24 +7,28 @@ Array [
     "mfa": false,
     "profile": "simpleProfile",
     "region": "us-east-1",
+    "sso": false,
   },
   Object {
     "assumeRole": false,
     "mfa": false,
     "profile": "cgu",
     "region": undefined,
+    "sso": false,
   },
   Object {
     "assumeRole": false,
     "mfa": false,
     "profile": "default",
     "region": "eu-west-2",
+    "sso": false,
   },
   Object {
     "assumeRole": true,
     "mfa": true,
     "profile": "mfaRoleAssume",
     "region": "eu-west-1",
+    "sso": false,
   },
   Object {
     "assumeRole": false,
@@ -32,6 +36,14 @@ Array [
     "mfa": false,
     "profile": "local",
     "region": "local",
+    "sso": false,
+  },
+  Object {
+    "assumeRole": false,
+    "mfa": false,
+    "profile": "sso_admin",
+    "region": "us-east-1",
+    "sso": true,
   },
 ]
 `;

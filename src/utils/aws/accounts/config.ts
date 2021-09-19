@@ -8,11 +8,13 @@ import {
   SharedConfigFiles,
 } from "@aws-sdk/shared-ini-file-loader";
 
+// These attributes are safe to show to render
 export type SafeProfile = {
   profile: string;
   mfa: boolean;
   assumeRole: boolean;
   region: string;
+  sso: boolean;
   endpoint?: string;
 };
 
@@ -80,6 +82,7 @@ const safeConfigConstructor = (entry: [string, Profile]): SafeProfile => {
     profile,
     mfa: Boolean(safeData.mfa_serial),
     assumeRole: Boolean(safeData.role_arn),
+    sso: Boolean(Object.keys(safeData).some((key) => key.startsWith("sso_"))),
     region: safeData.region,
   };
 
