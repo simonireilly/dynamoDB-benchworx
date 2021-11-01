@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.2",
-    "@cypress/react": "^4.16.4",
+    "@cypress/react": "^5.10.2",
     "@cypress/webpack-dev-server": "^1.1.0",
     "@electron-forge/cli": "^6.0.0-beta.61",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
